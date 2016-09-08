@@ -1,0 +1,8 @@
+prefix=/home/jo/farm_bot_workspace/catkin_ws/devel
+
+Name: farm_bot_driver
+Description: Description of farm_bot_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/jo/farm_bot_workspace/catkin_ws/devel/lib 
+Requires: 
