@@ -3,6 +3,6 @@ prefix=/home/jo/farm_bot_workspace/catkin_ws/install
 Name: farm_bot_driver
 Description: Description of farm_bot_driver
 Version: 0.0.0
-Cflags: 
+Cflags: -I/home/jo/farm_bot_workspace/catkin_ws/install/include
 Libs: -L/home/jo/farm_bot_workspace/catkin_ws/install/lib 
-Requires: 
+Requires: roscpp rospy std_msgs message_runtime

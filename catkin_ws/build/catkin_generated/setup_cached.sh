@@ -7,6 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export PKG_CONFIG_PATH="/opt/ros/jade/lib/pkgconfig"
 export PWD="/home/jo/farm_bot_workspace/catkin_ws/build"
-export ROS_PACKAGE_PATH="/home/jo/farm_bot_workspace/catkin_ws/src:/opt/ros/jade/share:/opt/ros/jade/stacks"
