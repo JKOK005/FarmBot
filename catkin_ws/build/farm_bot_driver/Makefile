@@ -154,18 +154,18 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/rule:
-	cd /home/jo/farm_bot_workspace/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/rule
-.PHONY : farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/rule
+farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/rule:
+	cd /home/jo/farm_bot_workspace/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/rule
+.PHONY : farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/rule
 
 # Convenience name for target.
-_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message: farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/rule
-.PHONY : _farm_bot_driver_generate_messages_check_deps_wheel_velocity_message
+_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg: farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/rule
+.PHONY : _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg
 
 # fast build rule for target.
-_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message/fast:
-	cd /home/jo/farm_bot_workspace/catkin_ws/build && $(MAKE) -f farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/build.make farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_message.dir/build
-.PHONY : _farm_bot_driver_generate_messages_check_deps_wheel_velocity_message/fast
+_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg/fast:
+	cd /home/jo/farm_bot_workspace/catkin_ws/build && $(MAKE) -f farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/build.make farm_bot_driver/CMakeFiles/_farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg.dir/build
+.PHONY : _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg/fast
 
 # Convenience name for target.
 farm_bot_driver/CMakeFiles/farm_bot_driver_gencpp.dir/rule:
@@ -467,7 +467,7 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... _farm_bot_driver_generate_messages_check_deps_wheel_velocity_message"
+	@echo "... _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg"
 	@echo "... edit_cache"
 	@echo "... farm_bot_driver_gencpp"
 	@echo "... farm_bot_driver_generate_messages"

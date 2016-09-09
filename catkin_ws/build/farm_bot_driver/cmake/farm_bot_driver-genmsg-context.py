@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg"
+messages_str = "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg"
 services_str = ""
 pkg_name = "farm_bot_driver"
 dependencies_str = "std_msgs"

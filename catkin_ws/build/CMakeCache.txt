@@ -301,6 +301,12 @@ gtest_force_shared_crt:BOOL=OFF
 //Dependencies for the target
 gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 
+//Value Computed by CMake
+imu_reader_BINARY_DIR:STATIC=/home/jo/farm_bot_workspace/catkin_ws/build/imu_reader
+
+//Value Computed by CMake
+imu_reader_SOURCE_DIR:STATIC=/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader
+
 //Path to a library.
 lib:FILEPATH=/opt/ros/jade/lib/libxmlrpcpp.so
 
@@ -435,7 +441,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=3
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=4
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

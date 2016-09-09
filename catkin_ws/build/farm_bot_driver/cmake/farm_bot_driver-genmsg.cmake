@@ -16,9 +16,9 @@ add_custom_target(farm_bot_driver_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" NAME_WE)
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" NAME_WE)
 add_custom_target(_farm_bot_driver_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "farm_bot_driver" "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "farm_bot_driver" "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" ""
 )
 
 #
@@ -28,7 +28,7 @@ add_custom_target(_farm_bot_driver_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(farm_bot_driver
-  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg"
+  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/farm_bot_driver
@@ -48,7 +48,7 @@ add_custom_target(farm_bot_driver_generate_messages_cpp
 add_dependencies(farm_bot_driver_generate_messages farm_bot_driver_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" NAME_WE)
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" NAME_WE)
 add_dependencies(farm_bot_driver_generate_messages_cpp _farm_bot_driver_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -61,7 +61,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS farm_bot_driver_generate_messages_c
 ### Section generating for lang: geneus
 ### Generating Messages
 _generate_msg_eus(farm_bot_driver
-  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg"
+  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/farm_bot_driver
@@ -81,7 +81,7 @@ add_custom_target(farm_bot_driver_generate_messages_eus
 add_dependencies(farm_bot_driver_generate_messages farm_bot_driver_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" NAME_WE)
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" NAME_WE)
 add_dependencies(farm_bot_driver_generate_messages_eus _farm_bot_driver_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -94,7 +94,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS farm_bot_driver_generate_messages_e
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(farm_bot_driver
-  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg"
+  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/farm_bot_driver
@@ -114,7 +114,7 @@ add_custom_target(farm_bot_driver_generate_messages_lisp
 add_dependencies(farm_bot_driver_generate_messages farm_bot_driver_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" NAME_WE)
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" NAME_WE)
 add_dependencies(farm_bot_driver_generate_messages_lisp _farm_bot_driver_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -127,7 +127,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS farm_bot_driver_generate_messages_l
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(farm_bot_driver
-  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg"
+  "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/farm_bot_driver
@@ -147,7 +147,7 @@ add_custom_target(farm_bot_driver_generate_messages_py
 add_dependencies(farm_bot_driver_generate_messages farm_bot_driver_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_message.msg" NAME_WE)
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/farm_bot_driver/msg/wheel_velocity_msg.msg" NAME_WE)
 add_dependencies(farm_bot_driver_generate_messages_py _farm_bot_driver_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

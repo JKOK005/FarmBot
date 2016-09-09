@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/farm_bot_driver_generate_messages_py"
-  "/home/jo/farm_bot_workspace/catkin_ws/devel/lib/python2.7/dist-packages/farm_bot_driver/msg/_wheel_velocity_message.py"
+  "/home/jo/farm_bot_workspace/catkin_ws/devel/lib/python2.7/dist-packages/farm_bot_driver/msg/_wheel_velocity_msg.py"
   "/home/jo/farm_bot_workspace/catkin_ws/devel/lib/python2.7/dist-packages/farm_bot_driver/msg/__init__.py"
 )
 

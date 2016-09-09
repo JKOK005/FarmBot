@@ -118,6 +118,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/jo/farm_bot_workspace/catkin_ws/build/gtest/cmake_install.cmake")
   include("/home/jo/farm_bot_workspace/catkin_ws/build/farm_bot_driver/cmake_install.cmake")
+  include("/home/jo/farm_bot_workspace/catkin_ws/build/imu_reader/cmake_install.cmake")
 
 endif()
 

@@ -1,0 +1,12 @@
+TODO:
+
+Define ros services:
+- msg_name: pid_control_req, topic: pid_control, pkg: imu_reader, function: Receives vehicle yaw and returns vehicle velocities by performing PID control
+	
+	-> request 	: float32 yaw
+	-> response : int32 FL_vel, FR_vel, BL_vel, BR_vel
+
+
+Add new functions to farm_bot_driver main.py
+- Servo control to dispense seeds
+- Servo control to water seeds
