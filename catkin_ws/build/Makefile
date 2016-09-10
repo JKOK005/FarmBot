@@ -245,6 +245,292 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named _arduino_driver_generate_messages_check_deps_encoder_vel_msg
+
+# Build rule for target.
+_arduino_driver_generate_messages_check_deps_encoder_vel_msg: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _arduino_driver_generate_messages_check_deps_encoder_vel_msg
+.PHONY : _arduino_driver_generate_messages_check_deps_encoder_vel_msg
+
+# fast build rule for target.
+_arduino_driver_generate_messages_check_deps_encoder_vel_msg/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/_arduino_driver_generate_messages_check_deps_encoder_vel_msg.dir/build.make arduino_driver/CMakeFiles/_arduino_driver_generate_messages_check_deps_encoder_vel_msg.dir/build
+.PHONY : _arduino_driver_generate_messages_check_deps_encoder_vel_msg/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_gencpp
+
+# Build rule for target.
+arduino_driver_gencpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_gencpp
+.PHONY : arduino_driver_gencpp
+
+# fast build rule for target.
+arduino_driver_gencpp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_gencpp.dir/build.make arduino_driver/CMakeFiles/arduino_driver_gencpp.dir/build
+.PHONY : arduino_driver_gencpp/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_generate_messages
+
+# Build rule for target.
+arduino_driver_generate_messages: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_generate_messages
+.PHONY : arduino_driver_generate_messages
+
+# fast build rule for target.
+arduino_driver_generate_messages/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_generate_messages.dir/build.make arduino_driver/CMakeFiles/arduino_driver_generate_messages.dir/build
+.PHONY : arduino_driver_generate_messages/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_generate_messages_cpp
+
+# Build rule for target.
+arduino_driver_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_generate_messages_cpp
+.PHONY : arduino_driver_generate_messages_cpp
+
+# fast build rule for target.
+arduino_driver_generate_messages_cpp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_generate_messages_cpp.dir/build.make arduino_driver/CMakeFiles/arduino_driver_generate_messages_cpp.dir/build
+.PHONY : arduino_driver_generate_messages_cpp/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_generate_messages_eus
+
+# Build rule for target.
+arduino_driver_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_generate_messages_eus
+.PHONY : arduino_driver_generate_messages_eus
+
+# fast build rule for target.
+arduino_driver_generate_messages_eus/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_generate_messages_eus.dir/build.make arduino_driver/CMakeFiles/arduino_driver_generate_messages_eus.dir/build
+.PHONY : arduino_driver_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_generate_messages_lisp
+
+# Build rule for target.
+arduino_driver_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_generate_messages_lisp
+.PHONY : arduino_driver_generate_messages_lisp
+
+# fast build rule for target.
+arduino_driver_generate_messages_lisp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_generate_messages_lisp.dir/build.make arduino_driver/CMakeFiles/arduino_driver_generate_messages_lisp.dir/build
+.PHONY : arduino_driver_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_generate_messages_py
+
+# Build rule for target.
+arduino_driver_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_generate_messages_py
+.PHONY : arduino_driver_generate_messages_py
+
+# fast build rule for target.
+arduino_driver_generate_messages_py/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_generate_messages_py.dir/build.make arduino_driver/CMakeFiles/arduino_driver_generate_messages_py.dir/build
+.PHONY : arduino_driver_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_geneus
+
+# Build rule for target.
+arduino_driver_geneus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_geneus
+.PHONY : arduino_driver_geneus
+
+# fast build rule for target.
+arduino_driver_geneus/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_geneus.dir/build.make arduino_driver/CMakeFiles/arduino_driver_geneus.dir/build
+.PHONY : arduino_driver_geneus/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_genlisp
+
+# Build rule for target.
+arduino_driver_genlisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_genlisp
+.PHONY : arduino_driver_genlisp
+
+# fast build rule for target.
+arduino_driver_genlisp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_genlisp.dir/build.make arduino_driver/CMakeFiles/arduino_driver_genlisp.dir/build
+.PHONY : arduino_driver_genlisp/fast
+
+#=============================================================================
+# Target rules for targets named arduino_driver_genpy
+
+# Build rule for target.
+arduino_driver_genpy: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arduino_driver_genpy
+.PHONY : arduino_driver_genpy
+
+# fast build rule for target.
+arduino_driver_genpy/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/arduino_driver_genpy.dir/build.make arduino_driver/CMakeFiles/arduino_driver_genpy.dir/build
+.PHONY : arduino_driver_genpy/fast
+
+#=============================================================================
+# Target rules for targets named roscpp_generate_messages_cpp
+
+# Build rule for target.
+roscpp_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_cpp
+.PHONY : roscpp_generate_messages_cpp
+
+# fast build rule for target.
+roscpp_generate_messages_cpp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make arduino_driver/CMakeFiles/roscpp_generate_messages_cpp.dir/build
+.PHONY : roscpp_generate_messages_cpp/fast
+
+#=============================================================================
+# Target rules for targets named roscpp_generate_messages_eus
+
+# Build rule for target.
+roscpp_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_eus
+.PHONY : roscpp_generate_messages_eus
+
+# fast build rule for target.
+roscpp_generate_messages_eus/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/roscpp_generate_messages_eus.dir/build.make arduino_driver/CMakeFiles/roscpp_generate_messages_eus.dir/build
+.PHONY : roscpp_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named roscpp_generate_messages_lisp
+
+# Build rule for target.
+roscpp_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_lisp
+.PHONY : roscpp_generate_messages_lisp
+
+# fast build rule for target.
+roscpp_generate_messages_lisp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/roscpp_generate_messages_lisp.dir/build.make arduino_driver/CMakeFiles/roscpp_generate_messages_lisp.dir/build
+.PHONY : roscpp_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named roscpp_generate_messages_py
+
+# Build rule for target.
+roscpp_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_py
+.PHONY : roscpp_generate_messages_py
+
+# fast build rule for target.
+roscpp_generate_messages_py/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/roscpp_generate_messages_py.dir/build.make arduino_driver/CMakeFiles/roscpp_generate_messages_py.dir/build
+.PHONY : roscpp_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named rosgraph_msgs_generate_messages_cpp
+
+# Build rule for target.
+rosgraph_msgs_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_cpp
+.PHONY : rosgraph_msgs_generate_messages_cpp
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_cpp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
+.PHONY : rosgraph_msgs_generate_messages_cpp/fast
+
+#=============================================================================
+# Target rules for targets named rosgraph_msgs_generate_messages_eus
+
+# Build rule for target.
+rosgraph_msgs_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_eus
+.PHONY : rosgraph_msgs_generate_messages_eus
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_eus/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build.make arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build
+.PHONY : rosgraph_msgs_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named rosgraph_msgs_generate_messages_lisp
+
+# Build rule for target.
+rosgraph_msgs_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_lisp
+.PHONY : rosgraph_msgs_generate_messages_lisp
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_lisp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
+.PHONY : rosgraph_msgs_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named rosgraph_msgs_generate_messages_py
+
+# Build rule for target.
+rosgraph_msgs_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_py
+.PHONY : rosgraph_msgs_generate_messages_py
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_py/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make arduino_driver/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
+.PHONY : rosgraph_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named std_msgs_generate_messages_cpp
+
+# Build rule for target.
+std_msgs_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_cpp
+.PHONY : std_msgs_generate_messages_cpp
+
+# fast build rule for target.
+std_msgs_generate_messages_cpp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make arduino_driver/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
+.PHONY : std_msgs_generate_messages_cpp/fast
+
+#=============================================================================
+# Target rules for targets named std_msgs_generate_messages_eus
+
+# Build rule for target.
+std_msgs_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_eus
+.PHONY : std_msgs_generate_messages_eus
+
+# fast build rule for target.
+std_msgs_generate_messages_eus/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make arduino_driver/CMakeFiles/std_msgs_generate_messages_eus.dir/build
+.PHONY : std_msgs_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named std_msgs_generate_messages_lisp
+
+# Build rule for target.
+std_msgs_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_lisp
+.PHONY : std_msgs_generate_messages_lisp
+
+# fast build rule for target.
+std_msgs_generate_messages_lisp/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make arduino_driver/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
+.PHONY : std_msgs_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named std_msgs_generate_messages_py
+
+# Build rule for target.
+std_msgs_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_py
+.PHONY : std_msgs_generate_messages_py
+
+# fast build rule for target.
+std_msgs_generate_messages_py/fast:
+	$(MAKE) -f arduino_driver/CMakeFiles/std_msgs_generate_messages_py.dir/build.make arduino_driver/CMakeFiles/std_msgs_generate_messages_py.dir/build
+.PHONY : std_msgs_generate_messages_py/fast
+
+#=============================================================================
 # Target rules for targets named _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg
 
 # Build rule for target.
@@ -373,162 +659,6 @@ farm_bot_driver_genpy: cmake_check_build_system
 farm_bot_driver_genpy/fast:
 	$(MAKE) -f farm_bot_driver/CMakeFiles/farm_bot_driver_genpy.dir/build.make farm_bot_driver/CMakeFiles/farm_bot_driver_genpy.dir/build
 .PHONY : farm_bot_driver_genpy/fast
-
-#=============================================================================
-# Target rules for targets named roscpp_generate_messages_cpp
-
-# Build rule for target.
-roscpp_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_cpp
-.PHONY : roscpp_generate_messages_cpp
-
-# fast build rule for target.
-roscpp_generate_messages_cpp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make farm_bot_driver/CMakeFiles/roscpp_generate_messages_cpp.dir/build
-.PHONY : roscpp_generate_messages_cpp/fast
-
-#=============================================================================
-# Target rules for targets named roscpp_generate_messages_eus
-
-# Build rule for target.
-roscpp_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_eus
-.PHONY : roscpp_generate_messages_eus
-
-# fast build rule for target.
-roscpp_generate_messages_eus/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/roscpp_generate_messages_eus.dir/build.make farm_bot_driver/CMakeFiles/roscpp_generate_messages_eus.dir/build
-.PHONY : roscpp_generate_messages_eus/fast
-
-#=============================================================================
-# Target rules for targets named roscpp_generate_messages_lisp
-
-# Build rule for target.
-roscpp_generate_messages_lisp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_lisp
-.PHONY : roscpp_generate_messages_lisp
-
-# fast build rule for target.
-roscpp_generate_messages_lisp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/roscpp_generate_messages_lisp.dir/build.make farm_bot_driver/CMakeFiles/roscpp_generate_messages_lisp.dir/build
-.PHONY : roscpp_generate_messages_lisp/fast
-
-#=============================================================================
-# Target rules for targets named roscpp_generate_messages_py
-
-# Build rule for target.
-roscpp_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 roscpp_generate_messages_py
-.PHONY : roscpp_generate_messages_py
-
-# fast build rule for target.
-roscpp_generate_messages_py/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/roscpp_generate_messages_py.dir/build.make farm_bot_driver/CMakeFiles/roscpp_generate_messages_py.dir/build
-.PHONY : roscpp_generate_messages_py/fast
-
-#=============================================================================
-# Target rules for targets named rosgraph_msgs_generate_messages_cpp
-
-# Build rule for target.
-rosgraph_msgs_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_cpp
-.PHONY : rosgraph_msgs_generate_messages_cpp
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_cpp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_cpp/fast
-
-#=============================================================================
-# Target rules for targets named rosgraph_msgs_generate_messages_eus
-
-# Build rule for target.
-rosgraph_msgs_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_eus
-.PHONY : rosgraph_msgs_generate_messages_eus
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_eus/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build.make farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build
-.PHONY : rosgraph_msgs_generate_messages_eus/fast
-
-#=============================================================================
-# Target rules for targets named rosgraph_msgs_generate_messages_lisp
-
-# Build rule for target.
-rosgraph_msgs_generate_messages_lisp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_lisp
-.PHONY : rosgraph_msgs_generate_messages_lisp
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_lisp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_lisp/fast
-
-#=============================================================================
-# Target rules for targets named rosgraph_msgs_generate_messages_py
-
-# Build rule for target.
-rosgraph_msgs_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rosgraph_msgs_generate_messages_py
-.PHONY : rosgraph_msgs_generate_messages_py
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_py/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make farm_bot_driver/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
-.PHONY : rosgraph_msgs_generate_messages_py/fast
-
-#=============================================================================
-# Target rules for targets named std_msgs_generate_messages_cpp
-
-# Build rule for target.
-std_msgs_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_cpp
-.PHONY : std_msgs_generate_messages_cpp
-
-# fast build rule for target.
-std_msgs_generate_messages_cpp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make farm_bot_driver/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
-.PHONY : std_msgs_generate_messages_cpp/fast
-
-#=============================================================================
-# Target rules for targets named std_msgs_generate_messages_eus
-
-# Build rule for target.
-std_msgs_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_eus
-.PHONY : std_msgs_generate_messages_eus
-
-# fast build rule for target.
-std_msgs_generate_messages_eus/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make farm_bot_driver/CMakeFiles/std_msgs_generate_messages_eus.dir/build
-.PHONY : std_msgs_generate_messages_eus/fast
-
-#=============================================================================
-# Target rules for targets named std_msgs_generate_messages_lisp
-
-# Build rule for target.
-std_msgs_generate_messages_lisp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_lisp
-.PHONY : std_msgs_generate_messages_lisp
-
-# fast build rule for target.
-std_msgs_generate_messages_lisp/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make farm_bot_driver/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
-.PHONY : std_msgs_generate_messages_lisp/fast
-
-#=============================================================================
-# Target rules for targets named std_msgs_generate_messages_py
-
-# Build rule for target.
-std_msgs_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 std_msgs_generate_messages_py
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	$(MAKE) -f farm_bot_driver/CMakeFiles/std_msgs_generate_messages_py.dir/build.make farm_bot_driver/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
 
 #=============================================================================
 # Target rules for targets named _imu_reader_generate_messages_check_deps_veh_state_msg
@@ -680,16 +810,16 @@ help:
 	@echo "... tests"
 	@echo "... gtest"
 	@echo "... gtest_main"
-	@echo "... _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg"
-	@echo "... farm_bot_driver_gencpp"
-	@echo "... farm_bot_driver_generate_messages"
-	@echo "... farm_bot_driver_generate_messages_cpp"
-	@echo "... farm_bot_driver_generate_messages_eus"
-	@echo "... farm_bot_driver_generate_messages_lisp"
-	@echo "... farm_bot_driver_generate_messages_py"
-	@echo "... farm_bot_driver_geneus"
-	@echo "... farm_bot_driver_genlisp"
-	@echo "... farm_bot_driver_genpy"
+	@echo "... _arduino_driver_generate_messages_check_deps_encoder_vel_msg"
+	@echo "... arduino_driver_gencpp"
+	@echo "... arduino_driver_generate_messages"
+	@echo "... arduino_driver_generate_messages_cpp"
+	@echo "... arduino_driver_generate_messages_eus"
+	@echo "... arduino_driver_generate_messages_lisp"
+	@echo "... arduino_driver_generate_messages_py"
+	@echo "... arduino_driver_geneus"
+	@echo "... arduino_driver_genlisp"
+	@echo "... arduino_driver_genpy"
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... roscpp_generate_messages_eus"
 	@echo "... roscpp_generate_messages_lisp"
@@ -702,6 +832,16 @@ help:
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_py"
+	@echo "... _farm_bot_driver_generate_messages_check_deps_wheel_velocity_msg"
+	@echo "... farm_bot_driver_gencpp"
+	@echo "... farm_bot_driver_generate_messages"
+	@echo "... farm_bot_driver_generate_messages_cpp"
+	@echo "... farm_bot_driver_generate_messages_eus"
+	@echo "... farm_bot_driver_generate_messages_lisp"
+	@echo "... farm_bot_driver_generate_messages_py"
+	@echo "... farm_bot_driver_geneus"
+	@echo "... farm_bot_driver_genlisp"
+	@echo "... farm_bot_driver_genpy"
 	@echo "... _imu_reader_generate_messages_check_deps_veh_state_msg"
 	@echo "... imu_reader_gencpp"
 	@echo "... imu_reader_generate_messages"

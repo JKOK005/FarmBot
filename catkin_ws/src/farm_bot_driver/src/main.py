@@ -12,9 +12,11 @@ import rospy
 import math
 import numpy as np
 import datetime 
+import time
 from std_msgs.msg import Bool
 from farm_bot_driver.msg import wheel_velocity_msg
 from imu_reader.msg import veh_state_msg
+from arduino_driver.msg import encoder_vel_msg
 from imu_reader.srv import pid_control_req
 
 class farmBotDriver:
@@ -29,13 +31,15 @@ class farmBotDriver:
 		
 		# Velocity for X / Y axis and theta degrees for R / P / Y
 		self.__state_vect			= {'vx':0, 'vy':0, 'th_roll':0, 'th_pitch':0, 'th_yaw':0}
+		self.__vel_encoder_avg		= 0 
 
 		# Initialize publisher
 		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool)
-		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_message)
+		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg)
 
 		# Initialize subscriber 
 		rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
+		rospy.Subscriber('encoder_vel', encoder_vel_msg, self.__vel_encoder_callback)
 
 		self.rate 					= rospy.Rate(freq)	
 		date_time 					= datetime.datetime.now()
@@ -52,6 +56,11 @@ class farmBotDriver:
 		self.__state_vect['th_roll'] 	= data.th_roll
 		self.__state_vect['th_pitch'] 	= data.th_pitch
 		self.__state_vect['th_yaw'] 	= data.th_yaw
+
+
+	def __vel_encoder_callback(self, data):
+		# Callback function for average wheel velocities using published readings
+		self.__vel_encoder_avg	= np.average([data.v_FL, data.v_FR, data.v_BL, data.v_BR])
 
 
 	def __pub_wheel_vel(self, vel_dict):
@@ -122,6 +131,25 @@ class farmBotDriver:
 		return
 
 
+	def __check_status(self):
+		"""
+		Function checks if the vehicle has ran into any problems. Some problems are:
+		a) Vehicle gets stuck in the mud and does not move -> Encoder reading but no movement
+		"""	
+		state_vect 	= self.__state_vect
+		tol 		= 0.1 	# Min speed of movement in m/s
+		duration 	= 30	# Duration in seconds for tolerance	
+
+		t1 			= time.time()
+		while time.time() - t1 <= duration:
+			if state_vect['vx'] >= tol:
+				return True
+			else:
+				# Treat as stationary
+				pass
+
+		return False		# Return error
+
 	def move_to_dist(self, dist):
 		"""
 		Function moves the robot by a fixed distance in a straight line. Movement is done in open loop
@@ -140,10 +168,27 @@ class farmBotDriver:
 
 		travelled 		= 0		# Straight line distance
 		timestep 		= self.timestep
+		tol 			= 0.5 	# m/s
 
-		while travelled < dist:
+		while travelled <= dist:
 			state_vect 	= self.__state_vect
-			vx_e		= state_vect['vx']* math.cos(state_vect['th_pitch'])* \
+
+			# TODO: Have a balance between encoder and velocity readings 
+			# Function uses encoder velocity readings if velocity readings are above threshold tol
+			if self.__check_status():
+				# If vehicle is working normally
+				if state_vect['vx'] <= tol:
+					vx_frame 	= state_vect['vx']
+				else:
+					vx_frame 	= self.__vel_encoder_avg
+
+			else:
+				# Vehicle stuck error handler.
+				print('Vehicle error -> Stuck')
+				rospy.loginfo('Vehicle error -> Stuck')
+				raise Exception('Vehicle error -> Stuck')
+
+			vx_e		= vx_frame* math.cos(state_vect['th_pitch'])* \
 						  math.cos(state_vect[th_yaw])	# vx in inertial frame
 
 			travelled 	+= vx_e* timestep		# Update travelled distance

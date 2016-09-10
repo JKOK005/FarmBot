@@ -1,2 +1,2 @@
-farm_bot_driver:imu_reader
+arduino_driver:farm_bot_driver:imu_reader
 -DCATKIN_DEVEL_PREFIX=/home/jo/farm_bot_workspace/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jo/farm_bot_workspace/catkin_ws/install -G Unix Makefiles
