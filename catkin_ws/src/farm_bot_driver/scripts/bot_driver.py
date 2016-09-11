@@ -1,11 +1,11 @@
 """ FarmBot API with support from ROS. FarmBot is a robot that travels autonomously across soil and plants different types of seeds.
 The Bot will water each seed after depositing it for the first time. The Bot is not made to perform watering tasks. 
 Tracking of the Bot is done using encoder readings and accelerometer readings. 
+
 The Bot is driven by a 4 wheeled drive using 4 dynamixel motors at each wheel. Differential trust is used to steer the Bot
 left or right. The wheels are controlled by the Arudino unit at the base which subscribes to a ROS topic that listens to wheel 
 velocities. At the head, the Raspberry Pi (model 3) performs computation on tilt angles and publishes goal state and wheel velocities.
 This Python script resides in the farm_bot_driver package 
-Tutorial:
 """
 
 import rospy
@@ -21,9 +21,10 @@ from imu_reader.srv import pid_control_req
 
 class farmBotDriver:
 	# Main controller for FarmBot
-	def __init__(self, timestep=0.1):
+	def __init__(self, name, timestep=0.1):
 		# User to define the timestep used
 
+		self.name					= name
 		self.timestep 				= timestep			# Seconds
 		self.freq 					= 1/timestep		# Hz
 		self.vel_limit 				= 100				# Each wheel can only have a max angular velocity starting from 0
@@ -40,13 +41,18 @@ class farmBotDriver:
 		# Initialize subscriber 
 		rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
 		rospy.Subscriber('encoder_vel', encoder_vel_msg, self.__vel_encoder_callback)
+		rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
 
-		self.rate 					= rospy.Rate(freq)	
+		self.rate 					= rospy.Rate(self.freq)	
 		date_time 					= datetime.datetime.now()
 
-		rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
 		rospy.loginfo(rospy.get_caller_id() + '-> Starting farm bot operation at -> ' + date_time.isoformat())
-	
+		print("Initializing {0}".format(self.name))
+
+
+	def __str__(self):
+		return '{0} says hello!'.format(self.name)
+
 
 	def __veh_state_callback(self, data):
 		# Callback function for vehicles velocity and tilt angle
@@ -71,10 +77,10 @@ class farmBotDriver:
 		"""
 		key_str 	= ['FL' , 'FR' , 'BL' , 'BR']
 
-		for strtemp in key_str:
+		for strtmp in key_str:
 			try:
 				# Asserts velocities are within angular velocity limited range
-				assert (vel_dict[strtemp] <= self.vel_limit and vel_dict >= 0)
+				assert (vel_dict[strtmp] <= self.vel_limit and vel_dict[strtmp] >= 0)
 
 			except AssertionError:
 				err = 'Wheel velocity {0} -> {1} exceeds limits of {2}'.format(strtmp, vel_dict[strtemp], self.vel_limit)
@@ -82,7 +88,7 @@ class farmBotDriver:
 				rospy.loginfo(err)
 				return 
 
-		msg 		= wheel_velocity_message()
+		msg 		= wheel_velocity_msg()
 
 		msg.FL_vel 	= vel_dict['FL']		# Assigns wheel angular velocities variables to msg
 		msg.FR_vel 	= vel_dict['FR']
@@ -139,8 +145,8 @@ class farmBotDriver:
 		state_vect 	= self.__state_vect
 		tol 		= 0.1 	# Min speed of movement in m/s
 		duration 	= 30	# Duration in seconds for tolerance	
-
 		t1 			= time.time()
+
 		while time.time() - t1 <= duration:
 			if state_vect['vx'] >= tol:
 				return True
@@ -149,6 +155,30 @@ class farmBotDriver:
 				pass
 
 		return False		# Return error
+
+
+	def drill_the_bloody_hole():
+		# As quoted by desmond quek
+		# Function drills a hole in the ground 
+		print("Drilling some damn holes")
+		pass
+
+	def plant_seeds():
+		# Function plants seeds using the dynamixel servo motor on the robot
+		# Raises out_of_seed exception
+		print("Planting some seeds")
+		pass
+
+
+	def water_seeds():
+		print("Watering the seeds")
+		pass
+
+
+	def test_pub_wheel_vel(self, vel_dict):
+		self.__pub_wheel_vel(vel_dict)
+		return
+
 
 	def move_to_dist(self, dist):
 		"""
@@ -164,11 +194,16 @@ class farmBotDriver:
 			return
 
 		rospy.loginfo('Travelling {0}m to goal'.format(dist))
+		print('Travelling {0}m to goal'.format(dist))
+
 		self.__set_goal_state(False)
 
 		travelled 		= 0		# Straight line distance
 		timestep 		= self.timestep
 		tol 			= 0.5 	# m/s
+		
+		vel_dict 		= {'FL':100 ,'FR':100, 'BL':100, 'BR':100}
+		self.__pub_wheel_vel(vel_dict)
 
 		while travelled <= dist:
 			state_vect 	= self.__state_vect

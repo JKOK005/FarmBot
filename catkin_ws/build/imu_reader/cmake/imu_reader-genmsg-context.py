@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
 messages_str = "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg"
-services_str = ""
+services_str = "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv"
 pkg_name = "imu_reader"
 dependencies_str = "std_msgs"
 langs = "gencpp;geneus;genlisp;genpy"

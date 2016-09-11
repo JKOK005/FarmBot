@@ -37,6 +37,10 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/imu_reader/srv" TYPE FILE FILES "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/imu_reader/cmake" TYPE FILE FILES "/home/jo/farm_bot_workspace/catkin_ws/build/imu_reader/catkin_generated/installspace/imu_reader-msg-paths.cmake")
 endif()
 

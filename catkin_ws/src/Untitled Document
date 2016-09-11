@@ -7,6 +7,19 @@ Define ros services:
 	-> response : int32 FL_vel, FR_vel, BL_vel, BR_vel
 
 
-Add new functions to farm_bot_driver main.py
-- Servo control to dispense seeds
-- Servo control to water seeds
+To develop:
+ - PID control for service
+ - Arduino node 
+ - Seed dispensing
+ - Watering mechanism
+ - Filter for yaw angle reading
+ - No_seed / No_water / Stuck errors
+ - Customized error exceptions
+
+
+To test:
+ - pid_control_req.srv is working
+
+Tested: 
+ - __pub_wheel_vel method
+ - __set_goal_state

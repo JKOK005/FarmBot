@@ -46,6 +46,7 @@ CMAKE_BINARY_DIR = /home/jo/farm_bot_workspace/catkin_ws/build
 include imu_reader/CMakeFiles/imu_reader_generate_messages_eus.dir/progress.make
 
 imu_reader/CMakeFiles/imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/msg/veh_state_msg.l
+imu_reader/CMakeFiles/imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/srv/pid_control_req.l
 imu_reader/CMakeFiles/imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/manifest.l
 
 /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/msg/veh_state_msg.l: /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py
@@ -54,13 +55,20 @@ imu_reader/CMakeFiles/imu_reader_generate_messages_eus: /home/jo/farm_bot_worksp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating EusLisp code from imu_reader/veh_state_msg.msg"
 	cd /home/jo/farm_bot_workspace/catkin_ws/build/imu_reader && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg -Iimu_reader:/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg -Istd_msgs:/opt/ros/jade/share/std_msgs/cmake/../msg -p imu_reader -o /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/msg
 
-/home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/manifest.l: /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py
+/home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/srv/pid_control_req.l: /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py
+/home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/srv/pid_control_req.l: /home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/jo/farm_bot_workspace/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating EusLisp code from imu_reader/pid_control_req.srv"
+	cd /home/jo/farm_bot_workspace/catkin_ws/build/imu_reader && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv -Iimu_reader:/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg -Istd_msgs:/opt/ros/jade/share/std_msgs/cmake/../msg -p imu_reader -o /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/srv
+
+/home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/manifest.l: /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/jo/farm_bot_workspace/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating EusLisp manifest code for imu_reader"
 	cd /home/jo/farm_bot_workspace/catkin_ws/build/imu_reader && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/jade/share/geneus/cmake/../../../lib/geneus/gen_eus.py -m -o /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader imu_reader std_msgs
 
 imu_reader_generate_messages_eus: imu_reader/CMakeFiles/imu_reader_generate_messages_eus
 imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/msg/veh_state_msg.l
+imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/srv/pid_control_req.l
 imu_reader_generate_messages_eus: /home/jo/farm_bot_workspace/catkin_ws/devel/share/roseus/ros/imu_reader/manifest.l
 imu_reader_generate_messages_eus: imu_reader/CMakeFiles/imu_reader_generate_messages_eus.dir/build.make
 .PHONY : imu_reader_generate_messages_eus

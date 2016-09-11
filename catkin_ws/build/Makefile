@@ -661,6 +661,19 @@ farm_bot_driver_genpy/fast:
 .PHONY : farm_bot_driver_genpy/fast
 
 #=============================================================================
+# Target rules for targets named _imu_reader_generate_messages_check_deps_pid_control_req
+
+# Build rule for target.
+_imu_reader_generate_messages_check_deps_pid_control_req: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _imu_reader_generate_messages_check_deps_pid_control_req
+.PHONY : _imu_reader_generate_messages_check_deps_pid_control_req
+
+# fast build rule for target.
+_imu_reader_generate_messages_check_deps_pid_control_req/fast:
+	$(MAKE) -f imu_reader/CMakeFiles/_imu_reader_generate_messages_check_deps_pid_control_req.dir/build.make imu_reader/CMakeFiles/_imu_reader_generate_messages_check_deps_pid_control_req.dir/build
+.PHONY : _imu_reader_generate_messages_check_deps_pid_control_req/fast
+
+#=============================================================================
 # Target rules for targets named _imu_reader_generate_messages_check_deps_veh_state_msg
 
 # Build rule for target.
@@ -842,6 +855,7 @@ help:
 	@echo "... farm_bot_driver_geneus"
 	@echo "... farm_bot_driver_genlisp"
 	@echo "... farm_bot_driver_genpy"
+	@echo "... _imu_reader_generate_messages_check_deps_pid_control_req"
 	@echo "... _imu_reader_generate_messages_check_deps_veh_state_msg"
 	@echo "... imu_reader_gencpp"
 	@echo "... imu_reader_generate_messages"

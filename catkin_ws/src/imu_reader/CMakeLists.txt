@@ -48,15 +48,15 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    veh_state_msg.msg
-#   Message2.msg
+   #wheel_vel_msg.msg
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
+add_service_files(
+   FILES
+   pid_control_req.srv
 #   Service2.srv
-# )
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(

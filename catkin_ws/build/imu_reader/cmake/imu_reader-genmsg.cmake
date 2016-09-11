@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "imu_reader: 1 messages, 0 services")
+message(STATUS "imu_reader: 1 messages, 1 services")
 
 set(MSG_I_FLAGS "-Iimu_reader:/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg;-Istd_msgs:/opt/ros/jade/share/std_msgs/cmake/../msg")
 
@@ -15,6 +15,11 @@ add_custom_target(imu_reader_generate_messages ALL)
 # verify that message/service dependencies have not changed since configure
 
 
+
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" NAME_WE)
+add_custom_target(_imu_reader_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "imu_reader" "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" ""
+)
 
 get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg" NAME_WE)
 add_custom_target(_imu_reader_generate_messages_check_deps_${_filename}
@@ -35,6 +40,12 @@ _generate_msg_cpp(imu_reader
 )
 
 ### Generating Services
+_generate_srv_cpp(imu_reader
+  "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/imu_reader
+)
 
 ### Generating Module File
 _generate_module_cpp(imu_reader
@@ -48,6 +59,8 @@ add_custom_target(imu_reader_generate_messages_cpp
 add_dependencies(imu_reader_generate_messages imu_reader_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" NAME_WE)
+add_dependencies(imu_reader_generate_messages_cpp _imu_reader_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg" NAME_WE)
 add_dependencies(imu_reader_generate_messages_cpp _imu_reader_generate_messages_check_deps_${_filename})
 
@@ -68,6 +81,12 @@ _generate_msg_eus(imu_reader
 )
 
 ### Generating Services
+_generate_srv_eus(imu_reader
+  "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/imu_reader
+)
 
 ### Generating Module File
 _generate_module_eus(imu_reader
@@ -81,6 +100,8 @@ add_custom_target(imu_reader_generate_messages_eus
 add_dependencies(imu_reader_generate_messages imu_reader_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" NAME_WE)
+add_dependencies(imu_reader_generate_messages_eus _imu_reader_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg" NAME_WE)
 add_dependencies(imu_reader_generate_messages_eus _imu_reader_generate_messages_check_deps_${_filename})
 
@@ -101,6 +122,12 @@ _generate_msg_lisp(imu_reader
 )
 
 ### Generating Services
+_generate_srv_lisp(imu_reader
+  "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/imu_reader
+)
 
 ### Generating Module File
 _generate_module_lisp(imu_reader
@@ -114,6 +141,8 @@ add_custom_target(imu_reader_generate_messages_lisp
 add_dependencies(imu_reader_generate_messages imu_reader_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" NAME_WE)
+add_dependencies(imu_reader_generate_messages_lisp _imu_reader_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg" NAME_WE)
 add_dependencies(imu_reader_generate_messages_lisp _imu_reader_generate_messages_check_deps_${_filename})
 
@@ -134,6 +163,12 @@ _generate_msg_py(imu_reader
 )
 
 ### Generating Services
+_generate_srv_py(imu_reader
+  "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/imu_reader
+)
 
 ### Generating Module File
 _generate_module_py(imu_reader
@@ -147,6 +182,8 @@ add_custom_target(imu_reader_generate_messages_py
 add_dependencies(imu_reader_generate_messages imu_reader_generate_messages_py)
 
 # add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/srv/pid_control_req.srv" NAME_WE)
+add_dependencies(imu_reader_generate_messages_py _imu_reader_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/jo/farm_bot_workspace/catkin_ws/src/imu_reader/msg/veh_state_msg.msg" NAME_WE)
 add_dependencies(imu_reader_generate_messages_py _imu_reader_generate_messages_check_deps_${_filename})
 
