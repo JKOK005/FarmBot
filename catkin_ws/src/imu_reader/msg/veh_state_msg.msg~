@@ -1,0 +1,7 @@
+# Message structure for IMU reading
+
+float32  vx
+float32	 vy
+float32	 th_roll
+float32	 th_pitch
+float32  th_yaw
