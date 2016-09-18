@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """ FarmBot API with support from ROS. FarmBot is a robot that travels autonomously across soil and plants different types of seeds.
 The Bot will water each seed after depositing it for the first time. The Bot is not made to perform watering tasks. 
 Tracking of the Bot is done using encoder readings and accelerometer readings. 
@@ -13,11 +15,24 @@ import math
 import numpy as np
 import datetime 
 import time
+import sys
 from std_msgs.msg import Bool
 from farm_bot_driver.msg import wheel_velocity_msg
 from imu_reader.msg import veh_state_msg
 from arduino_driver.msg import encoder_vel_msg
 from imu_reader.srv import pid_control_req
+
+class noSeedException(Exception):
+	# No seed exception class
+ 	def __init__(self, msg):
+ 		Exception.__init__(self, msg)
+
+
+class vehStuckException(Exception):
+	# Vehicle stuck exception class
+ 	def __init__(self, msg):
+ 		Exception.__init__(self, msg)
+
 
 class farmBotDriver:
 	# Main controller for FarmBot
@@ -144,7 +159,7 @@ class farmBotDriver:
 		"""	
 		state_vect 	= self.__state_vect
 		tol 		= 0.1 	# Min speed of movement in m/s
-		duration 	= 30	# Duration in seconds for tolerance	
+		duration 	= 10	# Duration in seconds for tolerance	
 		t1 			= time.time()
 
 		while time.time() - t1 <= duration:
@@ -157,22 +172,26 @@ class farmBotDriver:
 		return False		# Return error
 
 
-	def drill_the_bloody_hole():
+	def drill_the_bloody_hole(self,):
 		# As quoted by desmond quek
 		# Function drills a hole in the ground 
 		print("Drilling some damn holes")
 		pass
 
-	def plant_seeds():
+
+	def plant_seeds(self):
 		# Function plants seeds using the dynamixel servo motor on the robot
-		# Raises out_of_seed exception
+		# Raises noSeedException
 		print("Planting some seeds")
-		pass
+
+		# If there are no seeds left
+		raise noSeedException("No more seeds")
+		return
 
 
-	def water_seeds():
+	def water_seeds(self):
 		print("Watering the seeds")
-		pass
+		return
 
 
 	def test_pub_wheel_vel(self, vel_dict):
@@ -219,9 +238,7 @@ class farmBotDriver:
 
 			else:
 				# Vehicle stuck error handler.
-				print('Vehicle error -> Stuck')
-				rospy.loginfo('Vehicle error -> Stuck')
-				raise Exception('Vehicle error -> Stuck')
+				raise vehStuckException("Vehicle is stuck")
 
 			vx_e		= vx_frame* math.cos(state_vect['th_pitch'])* \
 						  math.cos(state_vect[th_yaw])	# vx in inertial frame
@@ -233,3 +250,48 @@ class farmBotDriver:
 		rospy.loginfo('Goal reached')
 		self.__set_goal_state(True)
 		return
+
+
+	def get_coords(self):
+		# Gets the vehicles GPS coordinates ... If we have the money to buy a GPS device
+		return '(100,200,300)'
+
+
+	def no_seeds_error(self):
+		rospy.loginfo('Vehicle error -> Out of seeds')
+		print("Vehicle is out of seeds. Coordinate location: {0}. Please come and refil!".format(self.get_coords()))
+		print("""
+Once done, press to execute operations
+r - Resume operation
+e - Exit and shut down""")
+		
+		usr_in 	= raw_input()
+		while (usr_in != 'r' and usr_in != 'e'):
+			print("Invalid input. Retype: ")
+			usr_in = raw_input()
+
+		if (usr_in == 'r'):
+			return
+
+		elif(usr_in == 'e'):
+			sys.exit(1)
+
+
+	def veh_stuck_error(self):
+		rospy.loginfo('Vehicle error -> Stuck')
+		print("Vehicle is stuck. Coordinate location: {0}!".format(self.get_coords()))
+		print("""
+Once done, press to execute operations
+r - Resume operation
+e - Exit and shut down""")
+		
+		usr_in 	= raw_input()
+		while (usr_in != 'r' and usr_in != 'e'):
+			print("Invalid input. Retype: ")
+			usr_in = raw_input()
+
+		if (usr_in == 'r'):
+			return
+
+		elif(usr_in == 'e'):
+			sys.exit(1)
