@@ -12,7 +12,7 @@ This Python script resides in the farm_bot_driver package
 
 import rospy
 import math
-import numpy as np
+import numpy as numpy
 import datetime 
 import time
 import sys
