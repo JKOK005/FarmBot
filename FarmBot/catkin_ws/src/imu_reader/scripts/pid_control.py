@@ -11,7 +11,7 @@ Params : P / I / D constants for control
 """
 
 import rospy
-from imu_reader.srv import pid_control_req
+from imu_reader.srv import *
 
 def handle_pid_control_req(req):
 	print("Returning PID request")
@@ -28,7 +28,7 @@ def handle_pid_control_req(req):
 	resp.BL_vel 	= # To fill
 	resp.BR_vel 	= # To fill
 
-	return response
+	return resp
 
 
 def pid_control_server():

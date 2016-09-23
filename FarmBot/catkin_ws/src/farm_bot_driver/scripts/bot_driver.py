@@ -12,10 +12,10 @@ This Python script resides in the farm_bot_driver package
 
 import rospy
 import math
-import numpy as numpy
 import datetime 
 import time
 import sys
+
 from std_msgs.msg import Bool
 from farm_bot_driver.msg import wheel_velocity_msg
 from imu_reader.msg import veh_state_msg
