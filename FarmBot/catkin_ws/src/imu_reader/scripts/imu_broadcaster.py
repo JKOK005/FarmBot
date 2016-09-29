@@ -42,18 +42,23 @@ class IMU_driver():
 	Publish topic		: 'veh_state' 
 	Subscribe topic		: None
 	"""
-	def __init__(self, timestep=0.1):
+	def __init__(self, timestep=0.01):
 
 		self.timestep 				= timestep				# Seconds
 		self.freq 					= 1/timestep			# Hz
 
 		# Global readings
-		self.imu_bias 				= np.array([0,0,0,0,0,0])
+		# self.imu_bias 				= np.array([0,0,0,0,0,0])
+		self.gaussian_bias 			= {"gyro_x":{"mean":0,"std",0}, "gyro_y":{"mean":0,"std",0}, "gyro_z":{"mean":0,"std",0}, \
+										"accel_x":{"mean":0,"std",0}, "accel_y":{"mean":0,"std",0}, "accel_z":{"mean":0,"std",0},}
 		self.ang_vel_reading 		= np.array([0,0,0])		# Angular velocity reading from gyroscope in [wx, wy, wz] (rad/s)
 		self.accel_reading			= np.array([0,0,0])		# Acceleration from accelerometer in [Ax, Ay, Az]
 		self.true_state 			= np.array([0,0,0])		# Global true sate of gimbal after filtering (rad)
 		self.P_k_k 					= [np.asmatrix(np.zeros((2,2))) for i in range(3)]		# Error covariance matrix for X / Y / Z
 		
+		self.vx 			= 0
+		self.vy 			= 0
+
 		self.veh_state_pubisher		= rospy.Publisher('veh_state', veh_state_msg)
 		rospy.init_node('imu_broadcaster')
 		rospy.loginfo('Starting imu_broadcaster node')
@@ -75,9 +80,16 @@ class IMU_driver():
 		"""
 		''' Code to poll the IMU for various readings '''
 
-		imu_reading 			= IMU.get_IMU_reading() - self.IMU_bias
-		self.ang_vel_reading 	= 2*pi*IMU_readings[:3]/ 360
-		self.accel_reading 		= IMU_readings[3:]
+		#imu_reading 			= IMU.get_IMU_reading() - self.IMU_bias
+
+		imu_bias 				= np.zeros(6)
+		for itr, measurement in zip(range(6), ['gyro_x', 'gyro_y', 'gyro_z', 'accel_x', 'accel_y', 'accel_z']):
+			imu_bias[itr]		= np.random.normal(self.gaussian_bias[measurement]['mean'], self.gaussian_bias[measurement]['std'], 1)
+
+		imu_reading 			= IMU.get_IMU_reading() - imu_bias
+		self.ang_vel_reading 	= 2*pi*imu_reading[:3]/ 360
+		self.accel_reading 		= imu_reading[3:]
+		#print('%.2f %.2f' % (self.ang_vel_reading[0],self.ang_vel_reading[1]))
 		return
 
 
@@ -101,7 +113,9 @@ class IMU_driver():
 		est_state[-1] *= 10                                                              # Yaw reading follows gyro
 
 		# Kalman filtering and update of true posterior state
-		x_k_k, P_update 	= self.__get_state_from_kalman(z_k=est_state, u_k=gyro_readings)			# Apply kalman filtering
+		z_k 			= est_state
+		u_k 			= self.ang_vel_reading
+		x_k_k, P_update 	= self.__get_state_from_kalman(z_k=z_k, u_k=u_k)			# Apply kalman filtering
 		self.true_state 	= x_k_k
 		self.P_k_k = P_update
 		return
@@ -126,8 +140,8 @@ class IMU_driver():
 		Q_gyro	 	= 0.003		# Gyro bias in Roll / Pitch / Yaw
 
 		# Kalman filtering parameters
-		F = np.matrix([[1,-self.smpl_time],[0,1]])		# State transition matrix
-		B = np.matrix([[self.smpl_time],[0]])	
+		F = np.matrix([[1,-self.timestep],[0,1]])		# State transition matrix
+		B = np.matrix([[self.timestep],[0]])	
 
 		#Start Kalman filtering from here onwards
 		Q_matrix 			= np.matrix([[Q_angle,0],[0,Q_gyro]])
@@ -153,38 +167,48 @@ class IMU_driver():
 		
 		print('Calibrating ... ')
 
-		smpl_size = 100
+		smpl_size = 200
 		slp_time = 0.01
 
-		gyro_bias_mean_x 	= []
-		gyro_bias_mean_y 	= []
-		gyro_bias_mean_z 	= []
-		accel_bias_mean_x	= []
-		accel_bias_mean_y 	= []
-		accel_bias_mean_z 	= []
+		gyro_bias_list_x 	= []
+		gyro_bias_list_y 	= []
+		gyro_bias_list_z 	= []
+		accel_bias_list_x	= []
+		accel_bias_list_y 	= []
+		accel_bias_list_z 	= []
 
 		for i in range(smpl_size):
 			reading = IMU.get_IMU_reading()
-			gyro_bias_mean_x.append(reading[0])
-			gyro_bias_mean_y.append(reading[1])
-			gyro_bias_mean_z.append(reading[2])
-			accel_bias_mean_x.append(reading[3])
-			accel_bias_mean_y.append(reading[4])
-			accel_bias_mean_z.append(reading[5] -1)		# Z is by default supposed to be 1
+			gyro_bias_list_x.append(reading[0])
+			gyro_bias_list_y.append(reading[1])
+			gyro_bias_list_z.append(reading[2])
+			accel_bias_list_x.append(reading[3])
+			accel_bias_list_y.append(reading[4])
+			accel_bias_list_z.append(reading[5] -1)		# Z is by default supposed to be 1
 			time.sleep(slp_time)
 
-		gyro_drift_rate_x 	= (gyro_bias_mean_x[-1] - gyro_bias_mean_x[0]) / (slp_time*smpl_size)    # Mean rate of drift in deg s^-2
-		gyro_drift_rate_y 	= (gyro_bias_mean_y[-1] - gyro_bias_mean_y[0]) / (slp_time*smpl_size)
-		gyro_drift_rate_z 	= (gyro_bias_mean_z[-1] - gyro_bias_mean_z[0]) / (slp_time*smpl_size)
+		gyro_drift_rate_x 	= (gyro_bias_list_x[-1] - gyro_bias_list_x[0]) / (slp_time*smpl_size)    # Mean rate of drift in deg s^-2
+		gyro_drift_rate_y 	= (gyro_bias_list_y[-1] - gyro_bias_list_y[0]) / (slp_time*smpl_size)
+		gyro_drift_rate_z 	= (gyro_bias_list_z[-1] - gyro_bias_list_z[0]) / (slp_time*smpl_size)
 
-		gyro_bias_x 	= np.mean(gyro_bias_mean_x)             # Calculates the mean bias after removal of drift 
-		gyro_bias_y 	= np.mean(gyro_bias_mean_y)
-		gyro_bias_z 	= np.mean(gyro_bias_mean_z)
-		accel_bias_x 	= np.mean(accel_bias_mean_x)
-		accel_bias_y 	= np.mean(accel_bias_mean_y)
-		accel_bias_z 	= np.mean(accel_bias_mean_z)
+		#gyro_bias_x 	= np.mean(gyro_bias_list_x)             # Calculates the mean bias after removal of drift 
+		#gyro_bias_y 	= np.mean(gyro_bias_list_y)
+		#gyro_bias_z 	= np.mean(gyro_bias_list_z)
+		#accel_bias_x 	= np.mean(accel_bias_list_x)
+		#accel_bias_y 	= np.mean(accel_bias_list_y)
+		#accel_bias_z 	= np.mean(accel_bias_list_z)
 
-		self.IMU_bias = np.array([gyro_bias_x, gyro_bias_y, gyro_bias_z, accel_bias_x, accel_bias_y, accel_bias_z])
+		#self.IMU_bias = np.array([gyro_bias_x, gyro_bias_y, gyro_bias_z, accel_bias_x, accel_bias_y, accel_bias_z])
+		gyro_bias_x 	= {"mean":gyro_bias_list_x, "std": np.std(gyro_bias_list_x)}
+		gyro_bias_y 	= {"mean":gyro_bias_list_y, "std": np.std(gyro_bias_list_y)}
+		gyro_bias_z 	= {"mean":gyro_bias_list_z, "std": np.std(gyro_bias_list_z)}
+		accel_bias_x 	= {"mean":accel_bias_list_x, "std": np.std(accel_bias_list_x)}
+		accel_bias_y 	= {"mean":accel_bias_list_y, "std": np.std(accel_bias_list_y)}
+		accel_bias_z 	= {"mean":accel_bias_list_z, "std": np.std(accel_bias_list_z)}
+
+		self.gaussian_bias 		= {"gyro_x":gyro_bias_x, "gyro_y":gyro_bias_y, "gyro_z":gyro_bias_z, \
+									"accel_x":accel_bias_x, "accel_y":accel_bias_y, "accel_z":accel_bias_z}
+
 		self.IMU_drift_rate = np.array([gyro_drift_rate_x, gyro_drift_rate_y, gyro_drift_rate_z])
 		print("calibration complete. Operation start!")
 		return
@@ -195,20 +219,25 @@ class IMU_driver():
 		Gets the tilt angle of the vehicle by performing IMU acquisition and kalman filtering
 		Thereafter, publish angle and velocity readings to topic "veh_state"
 		"""
+		g = 9.81 # m/s^2
+
 		while not rospy.is_shutdown():
 			self.__update_imu_reading()			# Gets IMU reading
 			self.__update_true_state()			# Performs Kalman filtering
+			
+			self.vx 		+= self.accel_reading[0] *self.timestep *g
+			self.vy 		+= self.accel_reading[1] *self.timestep	*g		
 
 			msg 			= veh_state_msg()
-			msg.vx			= self.accel_reading[0] *self.timestep
-			msg.vy 			= self.accel_reading[1] *self.timestep
+			msg.vx			= self.vx
+			msg.vy 			= self.vy
 			msg.th_roll		= self.true_state[0]
-			msg.th_pitch	= self.true_state[1]
+			msg.th_pitch		= self.true_state[1]
 			msg.th_yaw		= self.true_state[2]
 
 			self.veh_state_pubisher.publish(msg)
 			self.rate.sleep()
-
+			print('%.6f %.6f %.2f' %(msg.vx, msg.vy, self.accel_reading[1]))
 
 if __name__ == "__main__":
 	try:
