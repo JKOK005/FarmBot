@@ -11,7 +11,8 @@ Params : P / I / D constants for control
 """
 
 import rospy
-from imu_reader.srv import *
+import time
+from imu_reader.srv import pid_control_req
 
 def handle_pid_control_req(req):
 	print("Returning PID request")
@@ -20,13 +21,22 @@ def handle_pid_control_req(req):
 	yaw  			= req.yaw
 
 	# Calvin add your PID code here
+	yaw_old = #input previous yaw error from this function
+	base_vel = #input base velocity from user
 
+	t= #include timestep
+
+	Kp=1
+	Kd=1
+	Ki=1
+
+	param_vel_motor= Kp*yaw + Kd*(yaw-yaw_old)/t + Ki * yaw * t
 
 	resp 			= pid_control_reqResponse()
-	resp.FL_vel 	= # To fill
-	resp.FR_vel 	= # To fill
-	resp.BL_vel 	= # To fill
-	resp.BR_vel 	= # To fill
+	resp.FL_vel 	= (1-param_vel_motor) * base_vel 
+	resp.FR_vel 	= (1-param_vel_motor) * base_vel
+	resp.BL_vel 	= (1+param_vel_motor) * base_vel
+	resp.BR_vel 	= (1+param_vel_motor) * base_vel 
 
 	return resp
 
