@@ -5,6 +5,7 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Empty.h>
 #include "ServoCDs55.h"
+#include <Servo.h>
 
 /******************* Global variabls *******************/
 //servo number setup
@@ -12,13 +13,21 @@ int servoFL = 1;
 int servoFR = 2;
 int servoBL = 3;
 int servoBR = 4;
+int servoRotate = 5;
+int servoDrill = 6;
+int servoSeedPin = 7;
+int servoWaterPin = 8;
 ServoCds55 servomotor;
+Servo servoSeed;
+Servo servoWater;
 
 bool goal_state   = false;      // Move to distance
 int FL_vel;
 int FR_vel;
 int BL_vel;
 int BR_vel;
+int Drill_vel=1000;
+int Rotate_vel=300;
 
 bool drill_state  = false;
 bool plant_seed   = false; 
@@ -57,6 +66,12 @@ void runServo(int servonum, int vel){
   servomotor.rotate(servonum,vel);
 }
 
+void moveServo(int servonum, int pos, int vel){
+  servomotor.setVelocity(vel)
+  servomotor.write(servonum, pos);
+  delay(3000);
+}
+
 
 void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &vel_msg){
   // Function takes data and controls all 4 wheels angular velocity
@@ -67,15 +82,7 @@ void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &vel_msg){
   BL_vel  = vel_msg.BL_vel;
   BR_vel  = vel_msg.BR_vel;
 
-  // Commands each dynamixel to move at given angular velocity
-  servomotor.Reset(servoFL);
-  servomotor.Reset(servoFR);
-  servomotor.Reset(servoBL);
-  servomotor.Reset(servoBR);
-  runServo(servoFL, FL_vel);
-  runServo(servoFR, FR_vel);
-  runServo(servoBL, BL_vel);
-  runServo(servoBR, BR_vel);
+ 
   }
 
 
@@ -120,6 +127,9 @@ void setup(){
   nh.subscribe(drill_state_subscriber);
   nh.subscribe(plant_seed_subscriber);
   nh.subscribe(water_seed_subscriber);
+
+  servoSeed.attach(servoSeedPin);
+  servoWater.attach(servoWaterPin);
   
   Serial.begin(57600);
   }
@@ -129,18 +139,42 @@ void loop(){
   if(goal_state){
     nh.loginfo("Arduino -> Moving motor");
     // Executes movement here
+    // Commands each dynamixel to move at given angular velocity
+    servomotor.Reset(servoFL);
+    servomotor.Reset(servoFR);
+    servomotor.Reset(servoBL);
+    servomotor.Reset(servoBR);
 
+    //Velocity scale is from 0 (min) - 1024 (max)
+    runServo(servoFL, FL_vel);
+    runServo(servoFR, FR_vel);
+    runServo(servoBL, BL_vel);
+    runServo(servoBR, BR_vel);
     }
+    
   else if(drill_state){
     nh.loginfo("Arduino -> Drilling hole");
     // Drill hole
+    servomotor.Reset(servoDrill);
+    runServo(servoDrill, Drill_vel);
+    servomotor.Reset(servoRotate);
+    moveServo(servoRotate, 90, Rotate_vel);
+    delay(5000);
+    moveServo(servoRotate, 0, Rotate_vel);
+    runServo(servoDrill, 0);
 
+    
     // Set task complete flag
     arduino_opt_publisher.publish(&empty_msg);
     }
   else if(plant_seed){
     nh.loginfo("Arduino -> Planting seed");
     // Plant seed
+    servoSeed.write(0);
+    delay(4000);
+    servoSeed.write(90);
+    delay(4000);
+    servoSeed.write(0);
 
     arduino_opt_publisher.publish(&empty_msg);
     }
@@ -148,6 +182,12 @@ void loop(){
   else if(water_seed){
     nh.loginfo("Arduino -> Watering seed");
     // Water seed
+
+    servoWater.write(0);
+    delay(2000);
+    servoWater.write(90);
+    delay(2000);
+    servoWater.write(0);
 
     arduino_opt_publisher.publish(&empty_msg);
     }

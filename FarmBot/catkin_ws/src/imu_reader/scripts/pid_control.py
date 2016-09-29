@@ -21,10 +21,10 @@ def handle_pid_control_req(req):
 	yaw  			= req.yaw
 
 	# Calvin add your PID code here
-	yaw_old = #input previous yaw error from this function
-	base_vel = #input base velocity from user
+	yaw_old = req.yaw_old#input previous yaw error from this function
+	base_vel = req.vel#input base velocity from user
 
-	t= #include timestep
+	t= 0.01#include timestep
 
 	Kp=1
 	Kd=1
@@ -37,6 +37,8 @@ def handle_pid_control_req(req):
 	resp.FR_vel 	= (1-param_vel_motor) * base_vel
 	resp.BL_vel 	= (1+param_vel_motor) * base_vel
 	resp.BR_vel 	= (1+param_vel_motor) * base_vel 
+
+	req.yaw_old = yaw
 
 	return resp
 
