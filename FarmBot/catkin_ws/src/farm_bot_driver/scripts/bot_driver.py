@@ -15,11 +15,13 @@ import math
 import datetime 
 import time
 import sys
+import threading
 
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Empty
 from farm_bot_driver.msg import wheel_velocity_msg
 from imu_reader.msg import veh_state_msg
 from arduino_driver.msg import encoder_vel_msg
+from std_msgs import Bool
 from imu_reader.srv import pid_control_req
 
 class noSeedException(Exception):
@@ -45,17 +47,23 @@ class farmBotDriver:
 		self.vel_limit 				= 100				# Each wheel can only have a max angular velocity starting from 0
 		# self.__imu_reading 			= {'acc_x':0, 'acc_y':0, 'ang_roll':0, 'ang_pitch':0, 'ang_yaw':0}
 		
-		# Velocity for X / Y axis and theta degrees for R / P / Y
 		self.__state_vect			= {'vx':0, 'vy':0, 'th_roll':0, 'th_pitch':0, 'th_yaw':0}
 		self.__vel_encoder_avg		= 0 
+		self.__arduino_opt 			= False
+		self.__arduino_opt_event 	= threading.Event()
 
 		# Initialize publisher
-		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool)
 		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg)
+		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool)
+		self.drill_state_publisher 	= rospy.Publisher('drill_state', Bool)
+		self.plant_seed_publisher 	= rospy.Publisher('plant_seed', Bool)
+		self.water_seed_publisher	= rospy.Publisher('water_seed', Bool)
 
 		# Initialize subscriber 
 		rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
 		rospy.Subscriber('encoder_vel', encoder_vel_msg, self.__vel_encoder_callback)
+		rospy.Subscriber('arduino_in_operation', Empty, self.__arduino_callback)
+
 		rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
 
 		self.rate 					= rospy.Rate(self.freq)	
@@ -67,6 +75,12 @@ class farmBotDriver:
 
 	def __str__(self):
 		return '{0} says hello!'.format(self.name)
+
+
+	def __arduino_callback(self, data):
+		# Arduino callback to signal the end of operation
+		self.__arduino_opt_event.set()
+		self.__arduino_opt = True
 
 
 	def __veh_state_callback(self, data):
@@ -99,8 +113,7 @@ class farmBotDriver:
 
 			except AssertionError:
 				err = 'Wheel velocity {0} -> {1} exceeds limits of {2}'.format(strtmp, vel_dict[strtemp], self.vel_limit)
-				print(err)
-				rospy.loginfo(err)
+				rospy.logerr(err)
 				return 
 
 		msg 		= wheel_velocity_msg()
@@ -118,17 +131,41 @@ class farmBotDriver:
 	def __set_wheel_vel(self, msg):
 		# Publishes message of type wheel_velocity_message to topic 'wheel_vel'
 		self.wheel_vel_publisher.publish(msg)
-		# self.rate.sleep()
 		return
 
 
-	def __set_goal_state(self, status):
-		# Publishes information whether the goal has been reached
-		if status:
-			rospy.loginfo('Goal state reached')
+	def __set_goal_state(self, string, status):
+		# Set goal state publishes information of the status of the vehicle based on the "string" and "status" given
+		# We assume that the vehicle can only be in 1 state at a time
+		# veh_states 		= ['move','drill','plant','water']
 
-		self.goal_state_publisher.publish(status)
-		# self.rate.sleep()
+		if string == 'move':
+			self.goal_state_publisher.publish(status)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(False)
+
+		elif string == 'drill':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(status)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(False)
+
+		elif string == 'plant':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(status)
+			self.water_seed_publisher.publish(False)
+
+		elif string == 'water':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(status)
+
+		else:
+			rospy.logerr('Error on status -> Invalid string: {0}'.format(string))
+
 		return
 
 
@@ -148,7 +185,7 @@ class farmBotDriver:
 			self.__pub_wheel_vel(vel_dict)
 
 		except rospy.ServiceException as e:
-			print('Service call to /pid_control/ failed')
+			rospy.logerr('Service call to /pid_control/ failed')
 		return
 
 
@@ -172,25 +209,62 @@ class farmBotDriver:
 		return False		# Return error
 
 
-	def drill_the_bloody_hole(self,):
+	def drill_the_bloody_hole(self):
 		# As quoted by desmond quek
 		# Function drills a hole in the ground 
-		print("Drilling some damn holes")
-		pass
+		rospy.loginfo("RPi -> Drilling some damn holes")
+
+		self.__arduino_opt = False
+		self.__arduino_opt_event.clear()
+		self.__set_goal_state(string='drill',status=True)
+
+		self.__arduino_opt_event.wait(30)  		# Waits for Arduino's response
+		self.__set_goal_state(string='drill',status=False)
+
+		if(not self.__arduino_opt):
+			# Operation was not successful
+			rospy.logerr("RPi -> Error with drilling hole")
+
+		self.rate.sleep()
+		return
 
 
 	def plant_seeds(self):
 		# Function plants seeds using the dynamixel servo motor on the robot
 		# Raises noSeedException
-		print("Planting some seeds")
+		rospy.loginfo("RPi -> Planting some seeds")
 
-		# If there are no seeds left
-		raise noSeedException("No more seeds")
+		self.__arduino_opt = False
+		self.__arduino_opt_event.clear()
+		self.__set_goal_state(string='plant',status=True)
+
+		self.__arduino_opt_event.wait(30)  		# Waits for Arduino's response
+		self.__set_goal_state(string='plant',status=False)
+
+		if(not self.__arduino_opt):
+			# Operation was not successful
+			rospy.logerr("RPi -> Error with planting seeds")
+
+		self.rate.sleep()
+		# raise noSeedException("No more seeds")
 		return
 
 
 	def water_seeds(self):
-		print("Watering the seeds")
+		rospy.loginfo("RPi -> Watering seeds")
+
+		self.__arduino_opt = False
+		self.__arduino_opt_event.clear()
+		self.__set_goal_state(string='water',status=True)
+
+		self.__arduino_opt_event.wait(30)  		# Waits for Arduino's response
+		self.__set_goal_state(string='water',status=False)
+
+		if(not self.__arduino_opt):
+			# Operation was not successful
+			rospy.logerr("RPi -> Error with watering seeds")
+		
+		self.rate.sleep()
 		return
 
 
@@ -209,13 +283,12 @@ class farmBotDriver:
 		Output 	: goal_is_reached set as true
 		"""
 		if dist < 0:
-			print('Distance must be positive')
+			rospy.logerr('Distance must be positive')
 			return
 
 		rospy.loginfo('Travelling {0}m to goal'.format(dist))
-		print('Travelling {0}m to goal'.format(dist))
 
-		self.__set_goal_state(False)
+		self.__set_goal_state(string='move',status=True)
 
 		travelled 		= 0		# Straight line distance
 		timestep 		= self.timestep
@@ -248,7 +321,7 @@ class farmBotDriver:
 			self.rate.sleep()
 
 		rospy.loginfo('Goal reached')
-		self.__set_goal_state(True)
+		self.__set_goal_state(string='move',status=False)
 		return
 
 
