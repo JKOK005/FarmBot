@@ -26,8 +26,8 @@ int FL_vel;
 int FR_vel;
 int BL_vel;
 int BR_vel;
-int Drill_vel=-500;
-int Rotate_vel=50;
+int Drill_vel;
+int Rotate_vel=25;
 
 bool drill_state  = false;
 bool plant_seed   = false; 
@@ -153,6 +153,7 @@ void loop(){
     nh.loginfo("Arduino -> Drilling hole");
     // Drill hole
 
+    Drill_vel = 300;
     runServo(servoDrill, Drill_vel);
     moveServo(servoRotate, 90, Rotate_vel);
     delay(5000);
