@@ -67,7 +67,7 @@ void runServo(int servonum, int vel){
 }
 
 void moveServo(int servonum, int pos, int vel){
-  servomotor.setVelocity(vel)
+  servomotor.setVelocity(vel);  
   servomotor.write(servonum, pos);
   delay(3000);
 }
@@ -81,8 +81,6 @@ void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &vel_msg){
   FR_vel  = vel_msg.FR_vel;
   BL_vel  = vel_msg.BL_vel;
   BR_vel  = vel_msg.BR_vel;
-
- 
   }
 
 
@@ -162,7 +160,6 @@ void loop(){
     delay(5000);
     moveServo(servoRotate, 0, Rotate_vel);
     runServo(servoDrill, 0);
-
     
     // Set task complete flag
     arduino_opt_publisher.publish(&empty_msg);

@@ -21,7 +21,6 @@ from std_msgs.msg import Bool, Empty
 from farm_bot_driver.msg import wheel_velocity_msg
 from imu_reader.msg import veh_state_msg
 from arduino_driver.msg import encoder_vel_msg
-from std_msgs import Bool
 from imu_reader.srv import pid_control_req
 
 class noSeedException(Exception):
@@ -44,7 +43,7 @@ class farmBotDriver:
 		self.name					= name
 		self.timestep 				= timestep			# Seconds
 		self.freq 					= 1/timestep		# Hz
-		self.vel_limit 				= 100				# Each wheel can only have a max angular velocity starting from 0
+		self.vel_limit 				= 300				# Each wheel can only have a max angular velocity starting from 0
 		# self.__imu_reading 			= {'acc_x':0, 'acc_y':0, 'ang_roll':0, 'ang_pitch':0, 'ang_yaw':0}
 		
 		self.__state_vect			= {'vx':0, 'vy':0, 'th_roll':0, 'th_pitch':0, 'th_yaw':0}
@@ -297,29 +296,38 @@ class farmBotDriver:
 		vel_dict 		= {'FL':100 ,'FR':100, 'BL':100, 'BR':100}
 		self.__pub_wheel_vel(vel_dict)
 
-		while travelled <= dist:
-			state_vect 	= self.__state_vect
+		# Uncomment during actual demonstration
+		# while travelled <= dist:
+		# 	state_vect 	= self.__state_vect
 
-			# TODO: Have a balance between encoder and velocity readings 
-			# Function uses encoder velocity readings if velocity readings are above threshold tol
-			if self.__check_status():
-				# If vehicle is working normally
-				if state_vect['vx'] <= tol:
-					vx_frame 	= state_vect['vx']
-				else:
-					vx_frame 	= self.__vel_encoder_avg
+		# 	# TODO: Have a balance between encoder and velocity readings 
+		# 	# Function uses encoder velocity readings if velocity readings are above threshold tol
+		# 	if self.__check_status():
+		# 		# If vehicle is working normally
+		# 		if state_vect['vx'] <= tol:
+		# 			vx_frame 	= state_vect['vx']
+		# 		else:
+		# 			vx_frame 	= self.__vel_encoder_avg
 
-			else:
-				# Vehicle stuck error handler.
-				raise vehStuckException("Vehicle is stuck")
+		# 	else:
+		# 		# Vehicle stuck error handler.
+		# 		raise vehStuckException("Vehicle is stuck")
 
-			vx_e		= vx_frame* math.cos(state_vect['th_pitch'])* \
-						  math.cos(state_vect[th_yaw])	# vx in inertial frame
+		# 	vx_e		= vx_frame* math.cos(state_vect['th_pitch'])* \
+		# 				  math.cos(state_vect[th_yaw])	# vx in inertial frame
 
-			travelled 	+= vx_e* timestep		# Update travelled distance
-			self.__correct_tilt()				# Corrects vehicle tilt
-			self.rate.sleep()
+		# 	travelled 	+= vx_e* timestep		# Update travelled distance
+		# 	self.__correct_tilt()				# Corrects vehicle tilt
+		# 	self.rate.sleep()
 
+		# For debugging purposes - Move wheel at constant velocity
+		curr_time 		= time.time()	
+		duration 		= 5 	# seconds	
+		
+		while(time.time() - curr_time < duration):
+			self.__pub_wheel_vel(vel_dict)
+
+		stop_vel	= {'FL':0 ,'FR':0, 'BL':0, 'BR':0}
 		rospy.loginfo('Goal reached')
 		self.__set_goal_state(string='move',status=False)
 		return

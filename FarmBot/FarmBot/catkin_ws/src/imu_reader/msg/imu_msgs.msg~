@@ -1,7 +1,0 @@
-# Message structure for IMU reading
-
-float32 acc_x
-float32	acc_y
-float32	ang_roll
-float32	ang_pitch
-float32 ang_yaw
