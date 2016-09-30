@@ -26,8 +26,8 @@ int FL_vel;
 int FR_vel;
 int BL_vel;
 int BR_vel;
-int Drill_vel=600;
-int Rotate_vel=200;
+int Drill_vel=-500;
+int Rotate_vel=50;
 
 bool drill_state  = false;
 bool plant_seed   = false; 
@@ -166,11 +166,11 @@ void loop(){
   else if(plant_seed){
     nh.loginfo("Arduino -> Planting seed");
     // Plant seed
-    servoSeed.write(0);
+    servoSeed.writeMicroseconds(910);
     delay(4000);
-    servoSeed.write(90);
+    servoSeed.writeMicroseconds(1500);
     delay(4000);
-    servoSeed.write(0);
+    servoSeed.writeMicroseconds(910);
 
     arduino_opt_publisher.publish(&empty_msg);
     }
@@ -200,7 +200,7 @@ void loop(){
   //  float v_FL, v_FR, v_BL, v_BR;
   float* vel_enc   = get_vel_encoder();
   
-  Enc_msg.v_FL    = vel_enc[0];       // Gets wheel velocities from encoder to publish
+  Enc_msg.v_FL    = vel_enc[0];       // Gets wheel velocities from e1ncoder to publish
   Enc_msg.v_FR    = vel_enc[1];
   Enc_msg.v_BL    = vel_enc[2];
   Enc_msg.v_BR    = vel_enc[3];
