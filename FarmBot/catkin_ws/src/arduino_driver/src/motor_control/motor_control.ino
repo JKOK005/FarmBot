@@ -169,7 +169,7 @@ void loop(){
     // Plant seed
     servoSeed.writeMicroseconds(910);
     delay(4000);
-    servoSeed.writeMicroseconds(1500);
+    servoSeed.writeMicroseconds(2100);
     delay(4000);
     servoSeed.writeMicroseconds(910);
 
