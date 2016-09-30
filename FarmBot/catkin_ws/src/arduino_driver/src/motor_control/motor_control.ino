@@ -26,8 +26,8 @@ int FL_vel;
 int FR_vel;
 int BL_vel;
 int BR_vel;
-int Drill_vel=1000;
-int Rotate_vel=300;
+int Drill_vel=600;
+int Rotate_vel=200;
 
 bool drill_state  = false;
 bool plant_seed   = false; 
@@ -67,7 +67,7 @@ void runServo(int servonum, int vel){
 }
 
 void moveServo(int servonum, int pos, int vel){
-  servomotor.setVelocity(vel)
+  servomotor.setVelocity(vel);
   servomotor.write(servonum, pos);
   delay(3000);
 }
@@ -132,6 +132,7 @@ void setup(){
   servoWater.attach(servoWaterPin);
   
   Serial.begin(57600);
+  servomotor.begin();
   }
 
 
@@ -140,24 +141,19 @@ void loop(){
     nh.loginfo("Arduino -> Moving motor");
     // Executes movement here
     // Commands each dynamixel to move at given angular velocity
-    servomotor.Reset(servoFL);
-    servomotor.Reset(servoFR);
-    servomotor.Reset(servoBL);
-    servomotor.Reset(servoBR);
 
     //Velocity scale is from 0 (min) - 1024 (max)
     runServo(servoFL, FL_vel);
-    runServo(servoFR, FR_vel);
+    runServo(servoFR, -FR_vel);
     runServo(servoBL, BL_vel);
-    runServo(servoBR, BR_vel);
+    runServo(servoBR, -BR_vel);
     }
     
   else if(drill_state){
     nh.loginfo("Arduino -> Drilling hole");
     // Drill hole
-    servomotor.Reset(servoDrill);
+
     runServo(servoDrill, Drill_vel);
-    servomotor.Reset(servoRotate);
     moveServo(servoRotate, 90, Rotate_vel);
     delay(5000);
     moveServo(servoRotate, 0, Rotate_vel);
