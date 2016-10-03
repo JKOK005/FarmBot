@@ -52,11 +52,11 @@ class farmBotDriver:
 		self.__arduino_opt_event 	= threading.Event()
 
 		# Initialize publisher
-		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg)
-		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool)
-		self.drill_state_publisher 	= rospy.Publisher('drill_state', Bool)
-		self.plant_seed_publisher 	= rospy.Publisher('plant_seed', Bool)
-		self.water_seed_publisher	= rospy.Publisher('water_seed', Bool)
+		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg, queue_size=10)
+		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool, queue_size=10)
+		self.drill_state_publisher 	= rospy.Publisher('drill_state', Bool, queue_size=10)
+		self.plant_seed_publisher 	= rospy.Publisher('plant_seed', Bool, queue_size=10)
+		self.water_seed_publisher	= rospy.Publisher('water_seed', Bool, queue_size=10)
 
 		# Initialize subscriber 
 		rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
@@ -124,12 +124,15 @@ class farmBotDriver:
 
 		# Finally, publish the message
 		self.__set_wheel_vel(msg)
+		self.rate.sleep()
 		return
 
 
 	def __set_wheel_vel(self, msg):
 		# Publishes message of type wheel_velocity_message to topic 'wheel_vel'
-		self.wheel_vel_publisher.publish(msg)
+		for _ in range(50):
+			self.wheel_vel_publisher.publish(msg)
+		self.rate.sleep()
 		return
 
 
@@ -138,33 +141,35 @@ class farmBotDriver:
 		# We assume that the vehicle can only be in 1 state at a time
 		# veh_states 		= ['move','drill','plant','water']
 
-		if string == 'move':
-			self.goal_state_publisher.publish(status)
-			self.drill_state_publisher.publish(False)
-			self.plant_seed_publisher.publish(False)
-			self.water_seed_publisher.publish(False)
+		for _ in range(30):
+			if string == 'move':
+				self.goal_state_publisher.publish(status)
+				self.drill_state_publisher.publish(False)
+				self.plant_seed_publisher.publish(False)
+				self.water_seed_publisher.publish(False)
 
-		elif string == 'drill':
-			self.goal_state_publisher.publish(False)
-			self.drill_state_publisher.publish(status)
-			self.plant_seed_publisher.publish(False)
-			self.water_seed_publisher.publish(False)
+			elif string == 'drill':
+				self.goal_state_publisher.publish(False)
+				self.drill_state_publisher.publish(status)
+				self.plant_seed_publisher.publish(False)
+				self.water_seed_publisher.publish(False)
 
-		elif string == 'plant':
-			self.goal_state_publisher.publish(False)
-			self.drill_state_publisher.publish(False)
-			self.plant_seed_publisher.publish(status)
-			self.water_seed_publisher.publish(False)
+			elif string == 'plant':
+				self.goal_state_publisher.publish(False)
+				self.drill_state_publisher.publish(False)
+				self.plant_seed_publisher.publish(status)
+				self.water_seed_publisher.publish(False)
 
-		elif string == 'water':
-			self.goal_state_publisher.publish(False)
-			self.drill_state_publisher.publish(False)
-			self.plant_seed_publisher.publish(False)
-			self.water_seed_publisher.publish(status)
+			elif string == 'water':
+				self.goal_state_publisher.publish(False)
+				self.drill_state_publisher.publish(False)
+				self.plant_seed_publisher.publish(False)
+				self.water_seed_publisher.publish(status)
 
 		else:
 			rospy.logerr('Error on status -> Invalid string: {0}'.format(string))
 
+		self.rate.sleep()
 		return
 
 
@@ -288,15 +293,17 @@ class farmBotDriver:
 		rospy.loginfo('Travelling {0}m to goal'.format(dist))
 
 		self.__set_goal_state(string='move',status=True)
-
-		travelled 		= 0		# Straight line distance
-		timestep 		= self.timestep
-		tol 			= 0.5 	# m/s
 		
 		vel_dict 		= {'FL':100 ,'FR':100, 'BL':100, 'BR':100}
 		self.__pub_wheel_vel(vel_dict)
 
+		avg_vel 		= 0.333					# m/s
+		duration 		= dist / avg_vel 		# seconds	
+
 		# Uncomment during actual demonstration
+		# travelled 		= 0		# Straight line distance
+		# tol 				= 0.5 	# m/s
+		# timestep 			= self.timestep
 		# while travelled <= dist:
 		# 	state_vect 	= self.__state_vect
 
@@ -322,14 +329,16 @@ class farmBotDriver:
 
 		# For debugging purposes - Move wheel at constant velocity
 		curr_time 		= time.time()	
-		duration 		= 5 	# seconds	
 		
+		self.__pub_wheel_vel(vel_dict)
 		while(time.time() - curr_time < duration):
-			self.__pub_wheel_vel(vel_dict)
+			pass
+			
 
 		stop_vel	= {'FL':0 ,'FR':0, 'BL':0, 'BR':0}
+		self.__pub_wheel_vel(stop_vel)
 		rospy.loginfo('Goal reached')
-		self.__set_goal_state(string='move',status=False)
+		self.__set_goal_state(string='move',status=False)		
 		return
 
 
