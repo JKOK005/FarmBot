@@ -15,8 +15,8 @@ int servoBL = 3;
 int servoBR = 4;
 int servoRotate = 5;
 int servoDrill = 6;
-int servoSeedPin = 7;
-int servoWaterPin = 8;
+int servoSeedPin = 9;
+int servoWaterPin = 10;
 ServoCds55 servomotor;
 Servo servoSeed;
 Servo servoWater;
@@ -26,8 +26,8 @@ int FL_vel;
 int FR_vel;
 int BL_vel;
 int BR_vel;
-int Drill_vel=600;
-int Rotate_vel=200;
+int Drill_vel;
+int Rotate_vel=25;
 
 bool drill_state  = false;
 bool plant_seed   = false; 
@@ -157,6 +157,7 @@ void loop(){
     nh.loginfo("Arduino -> Drilling hole");
     // Drill hole
 
+    Drill_vel = 300;
     runServo(servoDrill, Drill_vel);
     moveServo(servoRotate, 90, Rotate_vel);
     delay(5000);
@@ -169,11 +170,11 @@ void loop(){
   else if(plant_seed){
     nh.loginfo("Arduino -> Planting seed");
     // Plant seed
-    servoSeed.write(0);
+    servoSeed.writeMicroseconds(910);
     delay(4000);
-    servoSeed.write(90);
+    servoSeed.writeMicroseconds(2100);
     delay(4000);
-    servoSeed.write(0);
+    servoSeed.writeMicroseconds(910);
 
     arduino_opt_publisher.publish(&empty_msg);
     }
@@ -203,7 +204,7 @@ void loop(){
   //  float v_FL, v_FR, v_BL, v_BR;
   float* vel_enc   = get_vel_encoder();
   
-  Enc_msg.v_FL    = vel_enc[0];       // Gets wheel velocities from encoder to publish
+  Enc_msg.v_FL    = vel_enc[0];       // Gets wheel velocities from e1ncoder to publish
   Enc_msg.v_FR    = vel_enc[1];
   Enc_msg.v_BL    = vel_enc[2];
   Enc_msg.v_BR    = vel_enc[3];
