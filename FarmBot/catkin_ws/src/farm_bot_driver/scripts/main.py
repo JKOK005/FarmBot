@@ -67,6 +67,7 @@ def read_execute_queue():
 				fnct(*args)		# Executes function
 			else:
 				fnct()
+		time.sleep(1)
 
 	except noSeedException:
 		# Raises empty seed dispenser to system
@@ -90,5 +91,6 @@ def read_execute_queue():
 if __name__ == "__main__": 
 	rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
 	initialize_queue()
+	raw_input('Press enter to begin operation')
 	read_execute_queue()
 	print("Finished executing instructions. Waiting for more")

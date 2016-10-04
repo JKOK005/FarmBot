@@ -33,34 +33,96 @@ bool drill_state  = false;
 bool plant_seed   = false; 
 bool water_seed   = false;
 
+const int xPin    = 32;
+const int yPin    = 34;
+
 const float timestep = 0.01;   // Timestep should match main script in RPi
 
-
 /******************* Function prototyopes  *******************/
+void checkIfVehicleStuck(void);
 void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &);
 void set_goal_state_callback(const std_msgs::Bool &);
 void set_drill_state_callback(const std_msgs::Bool &);
 void set_plant_seed_callback(const std_msgs::Bool &);
 void set_water_seed_callback(const std_msgs::Bool &);
-float* get_vel_encoder(void);
 
+void checkAccelVarianceAndPublish(int);
+float getVariance(const float*, int);
+void publishVehicleStuck(float, int);
 
 /******************* ROS configuration  *******************/
-ros::NodeHandle     nh;
-std_msgs::Empty     empty_msg;
+ros::NodeHandle                     nh;
+
+std_msgs::Empty                     empty_msg;
+std_msgs::Bool                      boolean_msg;
 arduino_driver::encoder_vel_msg     Enc_msg;
 
 ros::Publisher encoder_vel_publisher("encoder_vel", &Enc_msg);
 ros::Publisher arduino_opt_publisher("arduino_in_operation", &empty_msg);
+ros::Publisher vehicle_is_stuck("veh_stuck", &boolean_msg);
 
 ros::Subscriber<farm_bot_driver::wheel_velocity_msg> wheel_vel_subscriber("wheel_vel", &set_wheel_vel_callback);
 ros::Subscriber<std_msgs::Bool> goal_state_subscriber("goal_state", &set_goal_state_callback);
 ros::Subscriber<std_msgs::Bool> drill_state_subscriber("drill_state", &set_drill_state_callback);
-ros::Subscriber<std_msgs::Bool> plant_seed_subscriber("seed_plant", &set_plant_seed_callback);
+ros::Subscriber<std_msgs::Bool> plant_seed_subscriber("plant_seed", &set_plant_seed_callback);
 ros::Subscriber<std_msgs::Bool> water_seed_subscriber("water_seed", &set_water_seed_callback);
 
-
 /******************* Main  *******************/
+void publishVehicleStuck(float varianceProduct, int timeOut){
+  const unsigned int tolerance = 20;
+  if(varianceProduct < tolerance || timeOut <= 0){
+    // Publish stuck
+    boolean_msg.data    = true;
+    vehicle_is_stuck.publish(&boolean_msg);
+    return;
+    }
+  else if(varianceProduct < tolerance && timeOut > 0){
+    checkAccelVarianceAndPublish(--timeOut);
+    }
+  else{
+    // Publish vehicle is fine
+    boolean_msg.data    = false;
+    vehicle_is_stuck.publish(&boolean_msg);
+    }
+  }
+
+float getVariance(const float* array, int len){
+  float avg   = 0;
+  float var   = 0;
+  
+  for(int i=0; i<len; i++){
+    avg       += array[i];
+    }
+  avg         = avg/((float) len);
+
+  for(int i=0; i<len; i++){
+    var       += pow((array[i] -avg),2);
+    }
+  var         = var/((float) len);
+
+//  nh.loginfo("Arduino -> Calculated variance");
+  return var;
+  }
+
+void checkAccelVarianceAndPublish(int timeOut){
+  const int scale         = 100;
+  const int smpl_size     = 10;     // Sample size
+  float accel_x[smpl_size];
+  float accel_y[smpl_size];
+  float var_x;
+  float var_y;
+  
+  for(int i=0; i<smpl_size; i++){
+    accel_x[i]   = pulseIn(xPin,HIGH);
+    accel_y[i]   = pulseIn(yPin,HIGH); 
+    }
+  
+  var_x       = getVariance(accel_x, smpl_size) / (float) scale;      // Scales readings down to feasible values
+  var_y       = getVariance(accel_y, smpl_size) / (float) scale;
+  
+  // Serial.println(var_y *var_x);
+  publishVehicleStuck(var_y *var_x, timeOut);
+  }
 
 void runServo(int servonum, int vel){
   servomotor.rotate(servonum,vel);
@@ -71,7 +133,6 @@ void moveServo(int servonum, int pos, int vel){
   servomotor.write(servonum, pos);
   delay(3000);
 }
-
 
 void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &vel_msg){
   // Function takes data and controls all 4 wheels angular velocity
@@ -100,25 +161,12 @@ void set_water_seed_callback(const std_msgs::Bool &status_msg){
   water_seed    = status_msg.data;
   }
 
-float* get_vel_encoder(void){
-  // Function gets the encoder readings of all 4 wheels and computes velocity per wheel
-  // Returns a pointer to float array
-  // Sequence is (float) vel_FL / vel_FR / vel_BL / vel_BR
-  float *vel_encoder   = (float *) calloc(4, sizeof(float));    // We have to allocate memory which will persist after the destruction of the function
-  vel_encoder[0] = 1.11;
-  vel_encoder[1] = 2.22;
-  vel_encoder[2] = 3.33;
-  vel_encoder[3] = 4.44;
- 
-  return vel_encoder;
-  }
-
-
 void setup(){
   nh.initNode();  
   
   nh.advertise(encoder_vel_publisher);      
   nh.advertise(arduino_opt_publisher);
+  nh.advertise(vehicle_is_stuck);
   
   nh.subscribe(wheel_vel_subscriber);      
   nh.subscribe(goal_state_subscriber);
@@ -128,35 +176,33 @@ void setup(){
 
   servoSeed.attach(servoSeedPin);
   servoWater.attach(servoWaterPin);
+
+  pinMode(xPin, INPUT);
+  pinMode(yPin, INPUT);
   
   Serial.begin(57600);
   servomotor.begin();
+  delay(50);
   }
 
 
 void loop(){
   if(goal_state){
-    nh.loginfo("Arduino -> Moving motor");
-//    if(drill_state){
-//      nh.loginfo("drill_state true");
-//      }
-//    else{
-//      nh.loginfo("drill_state false");
-//      }
     // Executes movement here
     // Commands each dynamixel to move at given angular velocity
-
     //Velocity scale is from 0 (min) - 1024 (max)
+    
+    nh.loginfo("Arduino -> Moving motor");
     runServo(servoFL, FL_vel);
     runServo(servoFR, -FR_vel);
     runServo(servoBL, BL_vel);
     runServo(servoBR, -BR_vel);
+    checkAccelVarianceAndPublish(5);
     }
     
   else if(drill_state){
-    nh.loginfo("Arduino -> Drilling hole");
     // Drill hole
-
+    nh.loginfo("Arduino -> Drilling hole");
     Drill_vel = 300;
     runServo(servoDrill, Drill_vel);
     moveServo(servoRotate, 90, Rotate_vel);
@@ -167,6 +213,7 @@ void loop(){
     // Set task complete flag
     arduino_opt_publisher.publish(&empty_msg);
     }
+    
   else if(plant_seed){
     nh.loginfo("Arduino -> Planting seed");
     // Plant seed
@@ -193,14 +240,28 @@ void loop(){
     }
   else {
     // Do nothing
+    runServo(servoFL, 0);
+    runServo(servoFR, 0);
+    runServo(servoBL, 0);
+    runServo(servoBR, 0);
     nh.loginfo("Arduino -> Waiting for instruction");
     }
-    
+  delay(100);
   nh.spinOnce();
-//  delay(50);
   }
 
 /*
+ float* get_vel_encoder(void){
+  // Return sequence is (float) vel_FL / vel_FR / vel_BL / vel_BR
+  float *vel_encoder   = (float *) calloc(4, sizeof(float));    // We have to allocate memory which will persist after the destruction of the function
+  vel_encoder[0] = 1.11;
+  vel_encoder[1] = 2.22;
+  vel_encoder[2] = 3.33;
+  vel_encoder[3] = 4.44;
+ 
+  return vel_encoder;
+  }
+  
   //  float v_FL, v_FR, v_BL, v_BR;
   float* vel_enc   = get_vel_encoder();
   

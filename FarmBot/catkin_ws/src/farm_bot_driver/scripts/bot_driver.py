@@ -51,17 +51,20 @@ class farmBotDriver:
 		self.__arduino_opt 			= False
 		self.__arduino_opt_event 	= threading.Event()
 
+		self.__veh_is_stuck_flag 	= False
+
 		# Initialize publisher
-		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg, queue_size=10)
-		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool, queue_size=10)
-		self.drill_state_publisher 	= rospy.Publisher('drill_state', Bool, queue_size=10)
-		self.plant_seed_publisher 	= rospy.Publisher('plant_seed', Bool, queue_size=10)
-		self.water_seed_publisher	= rospy.Publisher('water_seed', Bool, queue_size=10)
+		self.wheel_vel_publisher 	= rospy.Publisher('wheel_vel', wheel_velocity_msg, latch=True, queue_size=10)
+		self.goal_state_publisher 	= rospy.Publisher('goal_state', Bool, latch=True, queue_size=10)
+		self.drill_state_publisher 	= rospy.Publisher('drill_state', Bool, latch=True, queue_size=10)
+		self.plant_seed_publisher 	= rospy.Publisher('plant_seed', Bool, latch=True, queue_size=10)
+		self.water_seed_publisher	= rospy.Publisher('water_seed', Bool, latch=True, queue_size=10)
 
 		# Initialize subscriber 
-		rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
-		rospy.Subscriber('encoder_vel', encoder_vel_msg, self.__vel_encoder_callback)
+		# rospy.Subscriber('veh_state', veh_state_msg, self.__veh_state_callback)
+		# rospy.Subscriber('encoder_vel', encoder_vel_msg, self.__vel_encoder_callback)
 		rospy.Subscriber('arduino_in_operation', Empty, self.__arduino_callback)
+		rospy.Subscriber('veh_stuck', Bool, self.__veh_stuck_callback)
 
 		rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
 
@@ -81,20 +84,22 @@ class farmBotDriver:
 		self.__arduino_opt_event.set()
 		self.__arduino_opt = True
 
+	# def __veh_state_callback(self, data):
+	# 	# Callback function for vehicles velocity and tilt angle
+	# 	# vx and vy are the velocities in the vehicle reference frame 
+	# 	self.__state_vect['vx'] 		= data.vx
+	# 	self.__state_vect['vy'] 		= data.vy
+	# 	self.__state_vect['th_roll'] 	= data.th_roll
+	# 	self.__state_vect['th_pitch'] 	= data.th_pitch
+	# 	self.__state_vect['th_yaw'] 	= data.th_yaw
 
-	def __veh_state_callback(self, data):
-		# Callback function for vehicles velocity and tilt angle
-		# vx and vy are the velocities in the vehicle reference frame 
-		self.__state_vect['vx'] 		= data.vx
-		self.__state_vect['vy'] 		= data.vy
-		self.__state_vect['th_roll'] 	= data.th_roll
-		self.__state_vect['th_pitch'] 	= data.th_pitch
-		self.__state_vect['th_yaw'] 	= data.th_yaw
 
+	# def __vel_encoder_callback(self, data):
+	# 	# Callback function for average wheel velocities using published readings
+	# 	self.__vel_encoder_avg	= np.average([data.v_FL, data.v_FR, data.v_BL, data.v_BR])
 
-	def __vel_encoder_callback(self, data):
-		# Callback function for average wheel velocities using published readings
-		self.__vel_encoder_avg	= np.average([data.v_FL, data.v_FR, data.v_BL, data.v_BR])
+	def __veh_stuck_callback(self, data):
+		self.__veh_is_stuck_flag 	= data.data
 
 
 	def __pub_wheel_vel(self, vel_dict):
@@ -130,8 +135,8 @@ class farmBotDriver:
 
 	def __set_wheel_vel(self, msg):
 		# Publishes message of type wheel_velocity_message to topic 'wheel_vel'
-		for _ in range(50):
-			self.wheel_vel_publisher.publish(msg)
+
+		self.wheel_vel_publisher.publish(msg)
 		self.rate.sleep()
 		return
 
@@ -141,30 +146,29 @@ class farmBotDriver:
 		# We assume that the vehicle can only be in 1 state at a time
 		# veh_states 		= ['move','drill','plant','water']
 
-		for _ in range(30):
-			if string == 'move':
-				self.goal_state_publisher.publish(status)
-				self.drill_state_publisher.publish(False)
-				self.plant_seed_publisher.publish(False)
-				self.water_seed_publisher.publish(False)
+		if string == 'move':
+			self.goal_state_publisher.publish(status)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(False)
 
-			elif string == 'drill':
-				self.goal_state_publisher.publish(False)
-				self.drill_state_publisher.publish(status)
-				self.plant_seed_publisher.publish(False)
-				self.water_seed_publisher.publish(False)
+		elif string == 'drill':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(status)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(False)
 
-			elif string == 'plant':
-				self.goal_state_publisher.publish(False)
-				self.drill_state_publisher.publish(False)
-				self.plant_seed_publisher.publish(status)
-				self.water_seed_publisher.publish(False)
+		elif string == 'plant':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(status)
+			self.water_seed_publisher.publish(False)
 
-			elif string == 'water':
-				self.goal_state_publisher.publish(False)
-				self.drill_state_publisher.publish(False)
-				self.plant_seed_publisher.publish(False)
-				self.water_seed_publisher.publish(status)
+		elif string == 'water':
+			self.goal_state_publisher.publish(False)
+			self.drill_state_publisher.publish(False)
+			self.plant_seed_publisher.publish(False)
+			self.water_seed_publisher.publish(status)
 
 		else:
 			rospy.logerr('Error on status -> Invalid string: {0}'.format(string))
@@ -173,24 +177,24 @@ class farmBotDriver:
 		return
 
 
-	def __correct_tilt(self):
-		"""
-		Function corrects for sideways movement of the vehicle to bring it into a straight line.
-		Correction is applied only to the yaw of the vehicle. We want the yaw to be 0.
-		Differential trust is used to steer the vehicle. 
-		"""
-		yaw 	= self.__state_vect['th_yaw']
+	# def __correct_tilt(self):
+	# 	"""
+	# 	Function corrects for sideways movement of the vehicle to bring it into a straight line.
+	# 	Correction is applied only to the yaw of the vehicle. We want the yaw to be 0.
+	# 	Differential trust is used to steer the vehicle. 
+	# 	"""
+	# 	yaw 	= self.__state_vect['th_yaw']
 
-		rospy.wait_for_service('pid_control')
-		try:
-			pid_control_proxy 	= rospy.ServiceProxy('pid_control', pid_control_req)
-			resp 				= pid_control_proxy(yaw)
-			vel_dict 			= {'FL':resp.FL_vel ,'FR':resp.FR_vel, 'BL':resp.BL_vel, 'BR':resp.BR_vel}
-			self.__pub_wheel_vel(vel_dict)
+	# 	rospy.wait_for_service('pid_control')
+	# 	try:
+	# 		pid_control_proxy 	= rospy.ServiceProxy('pid_control', pid_control_req)
+	# 		resp 				= pid_control_proxy(yaw)
+	# 		vel_dict 			= {'FL':resp.FL_vel ,'FR':resp.FR_vel, 'BL':resp.BL_vel, 'BR':resp.BR_vel}
+	# 		self.__pub_wheel_vel(vel_dict)
 
-		except rospy.ServiceException as e:
-			rospy.logerr('Service call to /pid_control/ failed')
-		return
+	# 	except rospy.ServiceException as e:
+	# 		rospy.logerr('Service call to /pid_control/ failed')
+	# 	return
 
 
 	def __check_status(self):
@@ -273,7 +277,15 @@ class farmBotDriver:
 
 
 	def test_pub_wheel_vel(self, vel_dict):
-		self.__pub_wheel_vel(vel_dict)
+		msg 		= wheel_velocity_msg()
+
+		msg.FL_vel 	= vel_dict['FL']		# Assigns wheel angular velocities variables to msg
+		msg.FR_vel 	= vel_dict['FR']
+		msg.BL_vel 	= vel_dict['BL']
+		msg.BR_vel 	= vel_dict['BR']
+
+		self.wheel_vel_publisher.publish(msg)
+		self.rate.sleep()
 		return
 
 
@@ -292,11 +304,7 @@ class farmBotDriver:
 
 		rospy.loginfo('Travelling {0}m to goal'.format(dist))
 
-		self.__set_goal_state(string='move',status=True)
-		
 		vel_dict 		= {'FL':100 ,'FR':100, 'BL':100, 'BR':100}
-		self.__pub_wheel_vel(vel_dict)
-
 		avg_vel 		= 0.333					# m/s
 		duration 		= dist / avg_vel 		# seconds	
 
@@ -328,17 +336,22 @@ class farmBotDriver:
 		# 	self.rate.sleep()
 
 		# For debugging purposes - Move wheel at constant velocity
+		self.__pub_wheel_vel(vel_dict)
+		self.__set_goal_state(string='move',status=True)
 		curr_time 		= time.time()	
 		
-		self.__pub_wheel_vel(vel_dict)
 		while(time.time() - curr_time < duration):
-			pass
-			
+			if(self.__veh_is_stuck_flag is True):
+				break 
 
 		stop_vel	= {'FL':0 ,'FR':0, 'BL':0, 'BR':0}
-		self.__pub_wheel_vel(stop_vel)
-		rospy.loginfo('Goal reached')
+		self.__pub_wheel_vel(stop_vel)		
 		self.__set_goal_state(string='move',status=False)		
+		
+		if(self.__veh_is_stuck_flag is True):
+			raise vehStuckException("Vehicle is stuck")
+		else:
+			rospy.loginfo('Goal reached')
 		return
 
 
