@@ -69,7 +69,8 @@ ros::Subscriber<std_msgs::Bool> water_seed_subscriber("water_seed", &set_water_s
 
 /******************* Main  *******************/
 void publishVehicleStuck(float varianceProduct, int timeOut){
-  const unsigned int tolerance = 20;
+  nh.spinOnce();
+  const unsigned int tolerance = 3;
   if(varianceProduct < tolerance || timeOut <= 0){
     // Publish stuck
     boolean_msg.data    = true;
@@ -146,6 +147,7 @@ void set_wheel_vel_callback(const farm_bot_driver::wheel_velocity_msg &vel_msg){
 
 
 void set_goal_state_callback(const std_msgs::Bool &status_msg){
+  nh.loginfo("Goal -> Callback");
   goal_state    = status_msg.data;
   }
 
@@ -182,7 +184,7 @@ void setup(){
   
   Serial.begin(57600);
   servomotor.begin();
-  delay(50);
+  delay(100);
   }
 
 
@@ -197,7 +199,9 @@ void loop(){
     runServo(servoFR, -FR_vel);
     runServo(servoBL, BL_vel);
     runServo(servoBR, -BR_vel);
+    delay(50);
     checkAccelVarianceAndPublish(5);
+    delay(50);
     }
     
   else if(drill_state){
@@ -205,11 +209,11 @@ void loop(){
     nh.loginfo("Arduino -> Drilling hole");
     Drill_vel = 300;
     runServo(servoDrill, Drill_vel);
-    moveServo(servoRotate, 90, Rotate_vel);
+    moveServo(servoRotate, 95, Rotate_vel);
     delay(5000);
     moveServo(servoRotate, 0, Rotate_vel);
     runServo(servoDrill, 0);
-    
+    delay(100);
     // Set task complete flag
     arduino_opt_publisher.publish(&empty_msg);
     }
@@ -222,7 +226,7 @@ void loop(){
     servoSeed.writeMicroseconds(2100);
     delay(4000);
     servoSeed.writeMicroseconds(910);
-
+    delay(100);
     arduino_opt_publisher.publish(&empty_msg);
     }
 
@@ -235,16 +239,16 @@ void loop(){
     servoWater.write(90);
     delay(2000);
     servoWater.write(0);
-
+    delay(100);
     arduino_opt_publisher.publish(&empty_msg);
     }
   else {
     // Do nothing
+    nh.loginfo("Arduino -> Waiting for instruction");
     runServo(servoFL, 0);
     runServo(servoFR, 0);
     runServo(servoBL, 0);
     runServo(servoBR, 0);
-    nh.loginfo("Arduino -> Waiting for instruction");
     }
   delay(100);
   nh.spinOnce();

@@ -288,6 +288,19 @@ class farmBotDriver:
 		self.rate.sleep()
 		return
 
+	def delta_move_dist(self):
+		# Moves the farm bot by a short delta distance for seed planting and watering 
+		rospy.loginfo('RPi -> Travelling a short distance')
+		vel_dict 		= {'FL':50 ,'FR':50, 'BL':50, 'BR':50}
+		const_delay 	= 2		# Travel for 2 seconds
+
+		self.__pub_wheel_vel(vel_dict)
+		self.__set_goal_state(string='move',status=True)
+		time.sleep(const_delay)		
+
+		stop_vel	= {'FL':0 ,'FR':0, 'BL':0, 'BR':0}
+		self.__pub_wheel_vel(stop_vel)		
+		self.__set_goal_state(string='move',status=False)	
 
 	def move_to_dist(self, dist):
 		"""
