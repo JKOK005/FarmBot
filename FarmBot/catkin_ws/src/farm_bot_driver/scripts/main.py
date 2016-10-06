@@ -22,26 +22,10 @@ priority_LOW 			= 7
 plot_dist_option 		= [1,2]	
 max_seed_no 			= 3
 
-def initialize_queue():
-	# Parses user request and loads the queue
-	while not main_q.empty():
-		main_q.get(timeout=t_out)
 
-	print("Loading new queue request")
-	print("\nHow many seeds do you wish to plant: ")	
-	no_of_seeds 			= int(raw_input())
-	
-	print("\nDistance between each plant: ")	
-	plot_distance 			= int(raw_input())
-
-	assert no_of_seeds <= max_seed_no and plot_distance in plot_dist_option
-
-	# Update the queue here
-	for _ in range(no_of_seeds):
-		__plan_seed_plant_with_dist(plot_distance)
-
-	return
-
+def __make_u_turn():
+	main_q.put((priority_MEDIUM, time.time(), driver.make_u_turn, None))
+	time.sleep(0.1)
 
 def __plan_seed_plant_with_dist(dist):
 	main_q.put((priority_MEDIUM, time.time(), driver.move_to_dist, [dist]))		# Pass arguments as list
@@ -60,6 +44,27 @@ def __plan_seed_plant_with_dist(dist):
 	time.sleep(0.1)
 	return
 
+def initialize_queue():
+	# Parses user request and loads the queue
+	while not main_q.empty():
+		main_q.get(timeout=t_out)
+
+	print("Loading new queue request")
+	print("\nHow many seeds do you wish to plant: ")	
+	no_of_seeds 			= int(raw_input())
+	
+	print("\nDistance between each plant: ")	
+	plot_distance 			= int(raw_input())
+
+	assert no_of_seeds <= max_seed_no and plot_distance in plot_dist_option
+
+	# Phase 1 : Normal operation of planting seeds 
+	for _ in range(no_of_seeds):
+		__plan_seed_plant_with_dist(plot_distance)
+
+	# Phase 2 : Executes a U-turn
+	__make_u_turn()
+	return
 
 def read_execute_queue():
 	try:

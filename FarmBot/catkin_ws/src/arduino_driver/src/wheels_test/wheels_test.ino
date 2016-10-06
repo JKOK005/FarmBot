@@ -12,8 +12,8 @@ int servoFR = 2;
 int servoBL = 3;
 int servoBR = 4;
 
-const int FL_vel  = 30;
-const int BL_vel  = 30;
+const int FL_vel  = 150;
+const int BL_vel  = 150;
 const int FR_vel  = 30;
 const int BR_vel  = 30;
 const int xPin    = 32;

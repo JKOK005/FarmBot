@@ -302,6 +302,20 @@ class farmBotDriver:
 		self.__pub_wheel_vel(stop_vel)		
 		self.__set_goal_state(string='move',status=False)	
 
+	def make_u_turn(self):
+		# Executes a 180 turn to the right
+		rospy.loginfo('RPi -> Executing U-turn')
+		vel_dict 		= {'FL':150 ,'FR':30, 'BL':150, 'BR':30}
+		const_delay 	= 19	# Travel for 2 seconds
+		
+		self.__pub_wheel_vel(vel_dict)
+		self.__set_goal_state(string='move',status=True)
+		time.sleep(const_delay)
+
+		stop_vel	= {'FL':0 ,'FR':0, 'BL':0, 'BR':0}
+		self.__pub_wheel_vel(stop_vel)		
+		self.__set_goal_state(string='move',status=False)
+
 	def move_to_dist(self, dist):
 		"""
 		Function moves the robot by a fixed distance in a straight line. Movement is done in open loop
