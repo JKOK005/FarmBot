@@ -209,11 +209,11 @@ void loop(){
     nh.loginfo("Arduino -> Drilling hole");
     Drill_vel = 300;
     runServo(servoDrill, Drill_vel);
-    moveServo(servoRotate, 95, Rotate_vel);
+    moveServo(servoRotate, 120, Rotate_vel);
     delay(5000);
     moveServo(servoRotate, 0, Rotate_vel);
     runServo(servoDrill, 0);
-    delay(100);
+    delay(1000);
     // Set task complete flag
     arduino_opt_publisher.publish(&empty_msg);
     }
@@ -223,7 +223,7 @@ void loop(){
     // Plant seed
     servoSeed.writeMicroseconds(910);
     delay(4000);
-    servoSeed.writeMicroseconds(2100);
+    servoSeed.writeMicroseconds(3500);
     delay(4000);
     servoSeed.writeMicroseconds(910);
     delay(100);
@@ -236,10 +236,10 @@ void loop(){
 
     servoWater.write(0);
     delay(2000);
-    servoWater.write(90);
+    servoWater.write(170);
     delay(2000);
     servoWater.write(0);
-    delay(100);
+    delay(1000);
     arduino_opt_publisher.publish(&empty_msg);
     }
   else {

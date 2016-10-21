@@ -38,6 +38,8 @@ def __plan_seed_plant_with_dist(dist):
 	time.sleep(0.1)
 	main_q.put((priority_MEDIUM, time.time(), driver.plant_seeds, None))
 	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.plant_seeds, None))
+	time.sleep(0.1)
 	main_q.put((priority_MEDIUM, time.time(), driver.delta_move_dist, None))
 	time.sleep(0.1)
 	main_q.put((priority_MEDIUM, time.time(), driver.water_seeds, None))
@@ -65,6 +67,36 @@ def initialize_queue():
 	# Phase 2 : Executes a U-turn
 	__make_u_turn()
 	return
+
+def demo_day_queue():
+	print("Loading demo day request")
+
+	main_q.put((priority_MEDIUM, time.time(), driver.drill_the_bloody_hole, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.delta_move_dist, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.plant_seeds, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.delta_move_dist, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.water_seeds, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.drill_the_bloody_hole, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.delta_move_dist, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.plant_seeds, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.delta_move_dist, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.water_seeds, None))
+	time.sleep(0.1)
+	main_q.put((priority_MEDIUM, time.time(), driver.move_to_dist, [2]))		# Pass arguments as list
+	time.sleep(0.1)
+	__make_u_turn()
+	main_q.put((priority_MEDIUM, time.time(), driver.move_to_dist, [4]))		# Pass arguments as list
+	time.sleep(0.1)
+
 
 def read_execute_queue():
 	try:
@@ -100,7 +132,7 @@ def read_execute_queue():
 
 if __name__ == "__main__": 
 	rospy.init_node('Farm_Bot_driver', anonymous=True, log_level=rospy.INFO)
-	initialize_queue()
+	demo_day_queue()
 	raw_input('Planning successful. Press enter to begin operation')
 	read_execute_queue()
 	print("Finished executing instructions. Waiting for more")
